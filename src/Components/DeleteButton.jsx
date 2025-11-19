@@ -1,39 +1,86 @@
-import React, { useState } from 'react';
-import axios from '@/api/axios';
+import React, { useState } from "react";
 
-export default function DeleteButton({ id }) {
+export default function DeleteButton({ onDelete }) {
   const [visible, setVisible] = useState(false);
 
-  const del = async (id) => {
-    try {
-      // Assumption: API DELETE endpoint for products
-      await axios.delete(`/api/products/${id}`);
-    } catch (e) {
-      // ignore error for now
-    }
-    setVisible(false);
+  const redButtonStyle = {
+    backgroundColor: "#dc2626",
+    color: "#ffffff",
+    fontWeight: 600,
+    padding: "0.5rem 1.5rem",
+    borderRadius: "0.75rem",
+    border: "none",
+    cursor: "pointer",
+    width: "100%",
+    textAlign: "center",
+    transition: "background-color 0.2s",
+    marginBottom: "0.5rem",
   };
 
-  const redButton =
-    "bg-red-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-red-700 transition-colors w-full text-center";
-  const secondaryButton =
-    "bg-gray-200 text-gray-800 font-semibold px-6 py-2 rounded-xl hover:bg-gray-300 transition-colors w-full text-center";
+  const secondaryButtonStyle = {
+    backgroundColor: "#e5e7eb",
+    color: "#1f2937",
+    fontWeight: 600,
+    padding: "0.5rem 1.5rem",
+    borderRadius: "0.75rem",
+    border: "none",
+    cursor: "pointer",
+    width: "100%",
+    textAlign: "center",
+    transition: "background-color 0.2s",
+    marginBottom: "0.5rem",
+  };
+
+  const modalStyle = {
+    marginTop: "1rem",
+    backgroundColor: "#ffffff",
+    padding: "1.5rem",
+    borderRadius: "1rem",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    border: "1px solid #e2cdbf",
+    width: "100%",
+    maxWidth: "28rem",
+    marginLeft: "auto",
+    marginRight: "auto",
+    textAlign: "center",
+  };
 
   return (
     <>
-      <button className={redButton} onClick={() => setVisible(true)}>
+      <button
+        style={redButtonStyle}
+        onClick={() => setVisible(true)}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#b91c1c")}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#dc2626")}
+      >
         Delete Product
       </button>
 
       {visible && (
-        <div className="mt-4 bg-white p-6 rounded-2xl shadow-md border border-[#e2cdbf] w-full max-w-md mx-auto space-y-4 text-center">
-          <h2 className="text-lg font-bold">Are you sure you want to delete?</h2>
+        <div style={modalStyle}>
+          <h2 style={{ fontSize: "1.125rem", fontWeight: "bold", marginBottom: "1rem" }}>
+            Are you sure you want to delete?
+          </h2>
 
-          <div className="flex flex-col space-y-4 mt-4">
-            <button className={secondaryButton} onClick={() => setVisible(false)}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginTop: "1rem" }}>
+            <button
+              style={secondaryButtonStyle}
+              onClick={() => setVisible(false)}
+              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#d1d5db")}
+              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#e5e7eb")}
+            >
               No
             </button>
-            <button className={redButton} onClick={() => del(id)}>
+
+            <button
+              style={redButtonStyle}
+              onClick={() => {
+                if (onDelete) onDelete();
+                setVisible(false);
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#b91c1c")}
+              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#dc2626")}
+            >
               Confirm Delete
             </button>
           </div>

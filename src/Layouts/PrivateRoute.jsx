@@ -1,37 +1,46 @@
-import { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
-import axios from '../api/axios';
+import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
 export default function PrivateRoute({ children }) {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = localStorage.getItem('auth_token');
-        
-        if (token) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        }
-        
-        const response = await axios.get('/api/user');
-        if (response.status === 200) {
-          setIsAuthenticated(true);
-        }
-      } catch (err) {
+    // Simulate checking auth token in localStorage
+    setTimeout(() => {
+      const token = localStorage.getItem("auth_token");
+
+      if (token) {
+        setIsAuthenticated(true);
+      } else {
         setIsAuthenticated(false);
-        localStorage.removeItem('auth_token');
-      } finally {
-        setLoading(false);
       }
-    };
-    
-    checkAuth();
+
+      setLoading(false);
+    }, 500); // simulate delay
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          fontFamily: "Poppins, sans-serif",
+          fontSize: "1.2rem",
+          color: "#4b2e17",
+        }}
+      >
+        Loading...
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return children;
 }

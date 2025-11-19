@@ -1,55 +1,101 @@
 import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { useNavigate } from "react-router-dom";
 
-export default function GenerateSalesReportCustom() {
-    const navigate = useNavigate();
-    const [from, setFrom] = useState("");
-    const [to, setTo] = useState("");
+export default function GenerateSalesReportCustom({ user, onGenerate }) {
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
 
-    const handleGenerate = () => {
-        if (!from || !to) return;
+  const handleGenerate = () => {
+    if (!from || !to) return;
 
-        navigate(`/generate-sales-report/custom?from=${from}&to=${to}`);
-    };
+    // Call the onGenerate callback if provided
+    if (onGenerate) onGenerate({ from, to });
 
-    return (
-        <AuthenticatedLayout>
+    // For demo purposes, log the selected dates
+    console.log(`Generate report from ${from} to ${to}`);
+  };
 
-            <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl border border-[#d7bfa0]">
-                <h1 className="text-2xl font-bold mb-6">Custom Sales Report</h1>
+  return (
+    <AuthenticatedLayout user={user}>
+      <div
+        style={{
+          maxWidth: "48rem",
+          margin: "2.5rem auto",
+          padding: "1.5rem",
+          backgroundColor: "white",
+          borderRadius: "0.75rem",
+          border: "1px solid #d7bfa0",
+          boxSizing: "border-box",
+        }}
+      >
+        <h1 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "1.5rem" }}>
+          Custom Sales Report
+        </h1>
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label className="block mb-1 font-semibold">From:</label>
-                        <input
-                            type="date"
-                            className="border rounded px-3 py-2 w-full"
-                            value={from}
-                            onChange={(e) => setFrom(e.target.value)}
-                        />
-                    </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "1rem",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <div>
+            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: "bold" }}>
+              From:
+            </label>
+            <input
+              type="date"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                border: "1px solid #ccc",
+                borderRadius: "0.375rem",
+                outline: "none",
+              }}
+            />
+          </div>
 
-                    <div>
-                        <label className="block mb-1 font-semibold">To:</label>
-                        <input
-                            type="date"
-                            className="border rounded px-3 py-2 w-full"
-                            value={to}
-                            onChange={(e) => setTo(e.target.value)}
-                        />
-                    </div>
-                </div>
+          <div>
+            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: "bold" }}>
+              To:
+            </label>
+            <input
+              type="date"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                border: "1px solid #ccc",
+                borderRadius: "0.375rem",
+                outline: "none",
+              }}
+            />
+          </div>
+        </div>
 
-                <div className="flex justify-end gap-4">
-                    <button
-                        onClick={handleGenerate}
-                        className="px-6 py-2 border border-[#4b2e17] bg-[#f9f5f0] font-bold hover:bg-[#e8d4b8] transition-colors"
-                    >
-                        Generate Report
-                    </button>
-                </div>
-            </div>
-        </AuthenticatedLayout>
-    );
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <button
+            onClick={handleGenerate}
+            style={{
+              padding: "0.5rem 1.5rem",
+              border: "1px solid #4b2e17",
+              backgroundColor: "#f9f5f0",
+              fontWeight: "bold",
+              borderRadius: "0.375rem",
+              cursor: "pointer",
+              transition: "background-color 0.2s",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
+          >
+            Generate Report
+          </button>
+        </div>
+      </div>
+    </AuthenticatedLayout>
+  );
 }

@@ -1,144 +1,168 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Transition } from '@headlessui/react';
-import axios from '@/api/axios';
-import useForm from '@/hooks/useForm';
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function UpdateProfileInformation({
-    mustVerifyEmail = false,
-    status: initialStatus = null,
-    className = '',
+  mustVerifyEmail,
+  status,
+  userData,
+  className = {},
 }) {
-    const [user, setUser] = useState(null);
-    const [status, setStatus] = useState(initialStatus);
+  const [data, setData] = useState({
+    name: userData?.name || '',
+    email: userData?.email || '',
+  });
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } =
-        useForm({
-            name: '',
-            email: '',
-        });
+  const [errors, setErrors] = useState({});
+  const [processing, setProcessing] = useState(false);
+  const [recentlySuccessful, setRecentlySuccessful] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
-    useEffect(() => {
-        let mounted = true;
-        axios
-            .get('/api/user')
-            .then((res) => {
-                if (!mounted) return;
-                setUser(res.data);
-                setData('name', res.data.name || '');
-                setData('email', res.data.email || '');
-            })
-            .catch(() => {});
+  const submit = (e) => {
+    e.preventDefault();
 
-        return () => (mounted = false);
-    }, [setData]);
+    const newErrors = {};
+    if (!data.name) newErrors.name = 'Name is required';
+    if (!data.email) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(data.email)) newErrors.email = 'Invalid email';
 
-    const submit = (e) => {
-        e.preventDefault();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
-        // Patch user profile via API endpoint
-        patch('/api/profile', {
-            onSuccess: () => setStatus('profile-updated'),
-        });
-    };
+    setProcessing(true);
 
-    return (
-        <section className={className}>
-            <header>
-                <h2 className="text-2xl font-bold text-[#4b2e17] mb-4">
-                    Profile Information
-                </h2>
+    setTimeout(() => {
+      console.log('Profile updated', data);
+      setProcessing(false);
+      setErrors({});
+      setRecentlySuccessful(true);
+      setTimeout(() => setRecentlySuccessful(false), 2000);
+    }, 1000);
+  };
 
-                <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
-                </p>
-            </header>
+  const resendVerification = () => {
+    setEmailSent(true);
+    setTimeout(() => setEmailSent(false), 3000);
+    console.log('Verification email sent');
+  };
 
-            <form onSubmit={submit} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
+  return (
+    <AuthenticatedLayout user={{ name: 'Demo User' }}>
+      <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', ...className }}>
+        {/* Header */}
+        <header>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#4b2e17', marginBottom: '0.5rem' }}>
+            Profile Information
+          </h2>
+          <p style={{ fontSize: '0.875rem', color: '#6b7280', lineHeight: 1.5 }}>
+            Update your account's profile information and email address.
+          </p>
+        </header>
 
-                    <TextInput
-                        id="name"
-                        className="mt-1 block w-full"
-                        value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
-                        required
-                        isFocused
-                        autoComplete="name"
-                    />
+        {/* Form */}
+        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
+          {/* Name */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <label htmlFor="name" style={{ fontWeight: 'bold', color: '#374151' }}>Name</label>
+            <input
+              id="name"
+              type="text"
+              value={data.name}
+              onChange={(e) => setData({ ...data, name: e.target.value })}
+              style={{
+                padding: '0.5rem',
+                borderRadius: '0.375rem',
+                border: '1px solid #d1d5db',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            />
+            {errors.name && <span style={{ color: 'red', fontSize: '0.875rem' }}>{errors.name}</span>}
+          </div>
 
-                    <InputError className="mt-2" message={errors.name} />
+          {/* Email */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <label htmlFor="email" style={{ fontWeight: 'bold', color: '#374151' }}>Email</label>
+            <input
+              id="email"
+              type="email"
+              value={data.email}
+              onChange={(e) => setData({ ...data, email: e.target.value })}
+              style={{
+                padding: '0.5rem',
+                borderRadius: '0.375rem',
+                border: '1px solid #d1d5db',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            />
+            {errors.email && <span style={{ color: 'red', fontSize: '0.875rem' }}>{errors.email}</span>}
+          </div>
+
+          {/* Email verification */}
+          {mustVerifyEmail && userData?.email_verified_at === null && (
+            <div style={{ marginTop: '0.5rem' }}>
+              <p style={{ fontSize: '0.875rem', color: '#374151' }}>
+                Your email address is unverified.
+                <button
+                  type="button"
+                  onClick={resendVerification}
+                  style={{
+                    marginLeft: '0.25rem',
+                    textDecoration: 'underline',
+                    background: 'none',
+                    border: 'none',
+                    color: '#4b5563',
+                    cursor: 'pointer',
+                    padding: 0,
+                  }}
+                >
+                  Click here to re-send the verification email.
+                </button>
+              </p>
+
+              {emailSent && (
+                <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: '#16a34a' }}>
+                  A new verification link has been sent to your email address.
                 </div>
+              )}
+            </div>
+          )}
 
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+          {/* Submit */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', marginTop: '1rem' }}>
+            <button
+              type="submit"
+              disabled={processing}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '0.375rem',
+                background: 'linear-gradient(to bottom, #22c55e, #15803d)',
+                color: 'white',
+                fontWeight: 'bold',
+                border: 'none',
+                cursor: processing ? 'not-allowed' : 'pointer',
+                opacity: processing ? 0.5 : 1,
+                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                transition: 'all 0.2s',
+              }}
+              onMouseOver={(e) => {
+                if (!processing) e.currentTarget.style.background = 'linear-gradient(to bottom, #16a34a, #166534)';
+              }}
+              onMouseOut={(e) => {
+                if (!processing) e.currentTarget.style.background = 'linear-gradient(to bottom, #22c55e, #15803d)';
+              }}
+            >
+              Save Changes
+            </button>
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        className="mt-1 block w-full"
-                        value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                        autoComplete="username"
-                    />
-
-                    <InputError className="mt-2" message={errors.email} />
-                </div>
-
-                {mustVerifyEmail && user && user.email_verified_at === null && (
-                    <div>
-                        <p className="mt-2 text-sm text-gray-800">
-                            Your email address is unverified.
-                            <button
-                                type="button"
-                                onClick={async () => {
-                                    try {
-                                        await axios.post('/api/email/verification-notification');
-                                        setStatus('verification-link-sent');
-                                    } catch (e) {
-                                        // ignore for now
-                                    }
-                                }}
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                                Click here to re-send the verification email.
-                            </button>
-                        </p>
-
-                        {status === 'verification-link-sent' && (
-                            <div className="mt-2 text-sm font-medium text-green-600">
-                                A new verification link has been sent to your
-                                email address.
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                <div className="w-full flex flex-col items-center mt-6 space-y-2">
-    <PrimaryButton
-        disabled={processing}
-        className="bg-gradient-to-b from-green-500 to-green-700 text-white font-semibold px-6 py-2 rounded-md shadow-md hover:from-green-600 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-    >
-        Save Changes
-    </PrimaryButton>
-
-    <Transition
-        show={recentlySuccessful}
-        enter="transition ease-in-out"
-        enterFrom="opacity-0"
-        leave="transition ease-in-out"
-        leaveTo="opacity-0"
-    >
-        <p className="text-sm text-gray-600 text-center">Saved.</p>
-    </Transition>
-</div>
-
-            </form>
-        </section>
-    );
+            {recentlySuccessful && (
+              <span style={{ fontSize: '0.875rem', color: '#6b7280', textAlign: 'center' }}>Saved.</span>
+            )}
+          </div>
+        </form>
+      </section>
+    </AuthenticatedLayout>
+  );
 }

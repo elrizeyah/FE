@@ -1,146 +1,160 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Transition } from '@headlessui/react';
-import useForm from '@/hooks/useForm';
-import { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function UpdatePasswordForm({ className = '' }) {
-    const passwordInput = useRef();
-    const currentPasswordInput = useRef();
+  const passwordInput = useRef();
+  const currentPasswordInput = useRef();
 
-    const {
-        data,
-        setData,
-        errors,
-        put,
-        reset,
-        processing,
-        recentlySuccessful,
-    } = useForm({
+  const [data, setData] = useState({
+    current_password: '',
+    password: '',
+    password_confirmation: '',
+  });
+
+  const [errors, setErrors] = useState({});
+  const [processing, setProcessing] = useState(false);
+  const [recentlySuccessful, setRecentlySuccessful] = useState(false);
+
+  const updatePassword = (e) => {
+    e.preventDefault();
+
+    // Simple validation
+    const newErrors = {};
+    if (!data.current_password) newErrors.current_password = 'Current password is required';
+    if (!data.password) newErrors.password = 'New password is required';
+    if (data.password !== data.password_confirmation)
+      newErrors.password_confirmation = 'Passwords do not match';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      if (newErrors.current_password) currentPasswordInput.current.focus();
+      else if (newErrors.password) passwordInput.current.focus();
+      return;
+    }
+
+    setProcessing(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      console.log('Password updated', data);
+      setProcessing(false);
+      setRecentlySuccessful(true);
+      setData({
         current_password: '',
         password: '',
         password_confirmation: '',
-    });
+      });
+      setErrors({});
+      setTimeout(() => setRecentlySuccessful(false), 2000);
+    }, 1000);
+  };
 
-    const updatePassword = (e) => {
-        e.preventDefault();
+  return (
+    <AuthenticatedLayout user={{ name: 'Demo User' }}>
+      <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', ...className }}>
+        {/* Header */}
+        <header>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#4b2e17', marginBottom: '0.5rem' }}>
+            Update Password
+          </h2>
+          <p style={{ fontSize: '0.875rem', color: '#6b7280', lineHeight: 1.5 }}>
+            Ensure your account is using a long, random password to stay secure.
+          </p>
+        </header>
 
-        // Send password update to API endpoint
-        put('/api/password', {
-            preserveScroll: true,
-            onSuccess: () => reset(),
-            onError: (errors) => {
-                if (errors.password) {
-                    reset('password', 'password_confirmation');
-                    passwordInput.current.focus();
-                }
+        <form onSubmit={updatePassword} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
+          {/* Current Password */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <label htmlFor="current_password" style={{ fontWeight: 'bold', color: '#374151' }}>Current Password</label>
+            <input
+              ref={currentPasswordInput}
+              id="current_password"
+              type="password"
+              value={data.current_password}
+              onChange={(e) => setData({ ...data, current_password: e.target.value })}
+              style={{
+                padding: '0.5rem',
+                borderRadius: '0.375rem',
+                border: '1px solid #d1d5db',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            />
+            {errors.current_password && <span style={{ color: 'red', fontSize: '0.875rem' }}>{errors.current_password}</span>}
+          </div>
 
-                if (errors.current_password) {
-                    reset('current_password');
-                    currentPasswordInput.current.focus();
-                }
-            },
-        });
-    };
+          {/* New Password */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <label htmlFor="password" style={{ fontWeight: 'bold', color: '#374151' }}>New Password</label>
+            <input
+              ref={passwordInput}
+              id="password"
+              type="password"
+              value={data.password}
+              onChange={(e) => setData({ ...data, password: e.target.value })}
+              style={{
+                padding: '0.5rem',
+                borderRadius: '0.375rem',
+                border: '1px solid #d1d5db',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            />
+            {errors.password && <span style={{ color: 'red', fontSize: '0.875rem' }}>{errors.password}</span>}
+          </div>
 
-    return (
-        <section className={className}>
-            <header>
-                <h2 className="text-2xl font-bold text-[#4b2e17] mb-4">
-                    Update Password
-                </h2>
+          {/* Confirm Password */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <label htmlFor="password_confirmation" style={{ fontWeight: 'bold', color: '#374151' }}>Confirm Password</label>
+            <input
+              id="password_confirmation"
+              type="password"
+              value={data.password_confirmation}
+              onChange={(e) => setData({ ...data, password_confirmation: e.target.value })}
+              style={{
+                padding: '0.5rem',
+                borderRadius: '0.375rem',
+                border: '1px solid #d1d5db',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            />
+            {errors.password_confirmation && <span style={{ color: 'red', fontSize: '0.875rem' }}>{errors.password_confirmation}</span>}
+          </div>
 
-                <p className="mt-1 text-sm text-gray-600">
-                    Ensure your account is using a long, random password to stay
-                    secure.
-                </p>
-            </header>
+          {/* Buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', marginTop: '1rem' }}>
+            <button
+              type="submit"
+              disabled={processing}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '0.375rem',
+                background: 'linear-gradient(to bottom, #22c55e, #15803d)',
+                color: 'white',
+                fontWeight: 'bold',
+                border: 'none',
+                cursor: processing ? 'not-allowed' : 'pointer',
+                opacity: processing ? 0.5 : 1,
+                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                transition: 'all 0.2s',
+              }}
+              onMouseOver={(e) => {
+                if (!processing) e.currentTarget.style.background = 'linear-gradient(to bottom, #16a34a, #166534)';
+              }}
+              onMouseOut={(e) => {
+                if (!processing) e.currentTarget.style.background = 'linear-gradient(to bottom, #22c55e, #15803d)';
+              }}
+            >
+              Save Changes
+            </button>
 
-            <form onSubmit={updatePassword} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel
-                        htmlFor="current_password"
-                        value="Current Password"
-                    />
-
-                    <TextInput
-                        id="current_password"
-                        ref={currentPasswordInput}
-                        value={data.current_password}
-                        onChange={(e) =>
-                            setData('current_password', e.target.value)
-                        }
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                    />
-
-                    <InputError
-                        message={errors.current_password}
-                        className="mt-2"
-                    />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="password" value="New Password" />
-
-                    <TextInput
-                        id="password"
-                        ref={passwordInput}
-                        value={data.password}
-                        onChange={(e) => setData('password', e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div>
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
-
-                    <TextInput
-                        id="password_confirmation"
-                        value={data.password_confirmation}
-                        onChange={(e) =>
-                            setData('password_confirmation', e.target.value)
-                        }
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                    />
-
-                    <InputError
-                        message={errors.password_confirmation}
-                        className="mt-2"
-                    />
-                </div>
-                    
-    <div className="w-full flex flex-col items-center mt-6 space-y-2">
-        <PrimaryButton
-            disabled={processing}
-            className="bg-gradient-to-b from-green-500 to-green-700 text-white font-semibold px-6 py-2 rounded-md shadow-md hover:from-green-600 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-        >
-            Save Changes
-        </PrimaryButton>
-    
-        <Transition
-            show={recentlySuccessful}
-            enter="transition ease-in-out"
-            enterFrom="opacity-0"
-            leave="transition ease-in-out"
-            leaveTo="opacity-0"
-        >
-            <p className="text-sm text-gray-600 text-center">Saved.</p>
-        </Transition>
-    </div>
-            </form>
-        </section>
-    );
+            {recentlySuccessful && (
+              <span style={{ fontSize: '0.875rem', color: '#6b7280', textAlign: 'center' }}>Saved.</span>
+            )}
+          </div>
+        </form>
+      </section>
+    </AuthenticatedLayout>
+  );
 }

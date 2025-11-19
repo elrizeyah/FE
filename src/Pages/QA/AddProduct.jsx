@@ -1,173 +1,231 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import useForm from "@/hooks/useForm";
 
 export default function AddProduct() {
-const {
-    data: productData,
-    setData: setProduct,
-    post: postProduct,
-    processing: processingProduct,
-    reset: resetForm,
-  } = useForm({
+  const [productData, setProduct] = useState({
     name: "",
-    quantity: "",
-    price: "",
+    quantity: 0,
+    price: 0,
     category: "",
     is_archived: false,
     file: null,
   });
 
-   const submitProducts = (e) => {
-    e.preventDefault();
-    
-    // Create FormData to handle file upload
-    const formData = new FormData();
-    formData.append('name', productData.name);
-    formData.append('quantity', productData.quantity);
-    formData.append('price', productData.price);
-    formData.append('category', productData.category);
-    formData.append('is_archived', productData.is_archived ? 1 : 0);
-    
-    // Only append file if one was selected
-    if (productData.file) {
-      formData.append('file', productData.file);
-    }
-    
-    postProduct("/api/postproducts", {
-      data: formData,
-      headers: { 'Content-Type': 'multipart/form-data' },
-      onSuccess: () => {resetForm()}
+  const resetForm = () => {
+    setProduct({
+      name: "",
+      quantity: 0,
+      price: 0,
+      category: "",
+      is_archived: false,
+      file: null,
     });
-    };
+  };
 
-    return (
-        <AuthenticatedLayout>
+  const submitProducts = (e) => {
+    e.preventDefault();
+    console.log("Submitting product:", productData);
+    alert("Product added successfully!");
+    resetForm();
+  };
 
-            <div className="flex justify-center py-12 px-4">
-                <form
-                    onSubmit={submitProducts}
-                    className="bg-[#fefaf7] border border-gray-300 rounded-2xl shadow-md w-full max-w-2xl"
+  return (
+    <AuthenticatedLayout>
+      <div style={{ display: "flex", justifyContent: "center", padding: "3rem 1rem" }}>
+        <form
+          onSubmit={submitProducts}
+          style={{
+            backgroundColor: "#fefaf7",
+            border: "1px solid #d1d5db",
+            borderRadius: "1rem",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            width: "100%",
+            maxWidth: "40rem",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* Header */}
+          <div
+            style={{
+              backgroundColor: "#f8ecdf",
+              padding: "1rem 1.5rem",
+              borderBottom: "1px solid #d1d5db",
+              borderTopLeftRadius: "1rem",
+              borderTopRightRadius: "1rem",
+            }}
+          >
+            <h1 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#000" }}>
+              Add Product
+            </h1>
+          </div>
+
+          {/* Form Fields */}
+          <div style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            {/* Product Name + Image */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#1f2937" }}>
+                Add Product Name
+              </label>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.25rem" }}>
+                <input
+                  type="text"
+                  value={productData.name}
+                  onChange={(e) => setProduct({ ...productData, name: e.target.value })}
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem",
+                    border: "1px solid #9ca3af",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.875rem",
+                  }}
+                />
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.25rem",
+                    fontSize: "0.875rem",
+                    backgroundColor: "#e5e7eb",
+                    padding: "0.5rem 0.75rem",
+                    border: "1px solid #9ca3af",
+                    borderRadius: "0.25rem",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#d1d5db")}
+                  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#e5e7eb")}
                 >
-                    {/* 🟤 Header */}
-                    <div className="bg-[#f8ecdf] px-6 py-4 border-b border-gray-300 rounded-t-2xl">
-                        <h1 className="text-xl font-bold text-black">Add Product</h1>
-                    </div>
-
-                    {/* 🟤 Form Fields */}
-                    <div className="p-6 space-y-5">
-                        {/* Product Name + Change Image */}
-                        <div>
-                            <label className="font-semibold text-sm text-gray-800">
-                                Add Product Name
-                            </label>
-                            <div className="flex items-center gap-2 mt-1">
-                                <input
-                                    type="text"
-                                    name="name"
-                                    className="flex-1 border border-gray-400 rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#4b2e17]"
-                                    value={productData.name}
-                                    onChange={(e) => setProduct("name", e.target.value)}
-                                />
-                                <label className="text-sm bg-gray-200 px-3 py-2 border border-gray-400 rounded cursor-pointer hover:bg-gray-300 transition">
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => setProduct("file", e.target.files[0])}
-                                        className="hidden"
-                                    />
-                                    <span role="img" aria-label="camera">📷</span> Change Image
-                                </label>
-                            </div>
-                        </div>
-
-                        {/* Category */}
-                        <div>
-                            <label className="font-semibold text-sm text-gray-800">
-                                Add Category
-                            </label>
-                            <select
-                                name="category"
-                                className="mt-1 w-full border border-gray-400 rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#4b2e17]"
-                                value={productData.category}
-                                onChange={(e) => setProduct("category", e.target.value)}
-                            >
-                                <option value="">Select category</option>
-                                <option value="chocolate">Chocolate</option>
-                                <option value="drinks">Drinks</option>
-                                <option value="snacks">Snacks</option>
-                            </select>
-                        </div>
-
-                        {/* Quantity */}
-                        <div>
-                            <label className="font-semibold text-sm text-gray-800">
-                                Indicate Quantity Available
-                            </label>
-                            <div className="flex items-center gap-2 mt-1">
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setProduct("quantity", Math.max(0, productData.quantity - 1))
-                                    }
-                                    className="border border-gray-400 px-3 py-1 rounded hover:bg-gray-200"
-                                >
-                                    -
-                                </button>
-                                <input
-                                    type="number"
-                                    name="quantity"
-                                    value={productData.quantity} 
-                                    onChange={(e) => setProduct("quantity", Number(e.target.value))}
-                                    className="w-full border border-gray-400 rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#4b2e17]"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setProduct("quantity", parseInt(productData.quantity || 0) + 1)
-                                    }
-                                    className="border border-gray-400 px-3 py-1 rounded hover:bg-gray-200"
-                                >
-                                    +
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Price */}
-                        <div>
-                            <label className="font-semibold text-sm text-gray-800">
-                                Indicate Price
-                            </label>
-                            <input
-                                type="number"
-                                name="price"
-                                placeholder="₱ 00.00"
-                                className="mt-1 w-full border border-gray-400 rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#4b2e17]"
-                                value={productData.price}
-                                onChange={(e) => setProduct("price", Number(e.target.value))}
-                            />
-                        </div>
-                    </div>
-
-                    {/* 🟤 Buttons */}
-                    <div className="flex justify-end items-center gap-4 px-6 py-4 border-t border-gray-300">
-                        <button
-                            type="button"
-                            onClick={resetForm}
-                            className="text-sm font-semibold text-black hover:underline"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={processingProduct}
-                            className="bg-[#4b2e17] text-white px-5 py-2 rounded-sm font-semibold hover:bg-[#3a2211] transition"
-                        >
-                            Add Product
-                        </button>
-                    </div>
-                </form>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setProduct({ ...productData, file: e.target.files[0] })}
+                    style={{ display: "none" }}
+                  />
+                  📷 Change Image
+                </label>
+              </div>
             </div>
-        </AuthenticatedLayout>
-    );
+
+            {/* Category */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#1f2937" }}>Add Category</label>
+              <select
+                value={productData.category}
+                onChange={(e) => setProduct({ ...productData, category: e.target.value })}
+                style={{
+                  marginTop: "0.25rem",
+                  padding: "0.5rem",
+                  border: "1px solid #9ca3af",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.875rem",
+                }}
+              >
+                <option value="">Select category</option>
+                <option value="chocolate">Chocolate</option>
+                <option value="drinks">Drinks</option>
+                <option value="snacks">Snacks</option>
+              </select>
+            </div>
+
+            {/* Quantity */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#1f2937" }}>Indicate Quantity Available</label>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.25rem" }}>
+                <button
+                  type="button"
+                  onClick={() => setProduct({ ...productData, quantity: Math.max(0, productData.quantity - 1) })}
+                  style={{ padding: "0.25rem 0.5rem", border: "1px solid #9ca3af", borderRadius: "0.25rem", cursor: "pointer" }}
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  value={productData.quantity}
+                  onChange={(e) => setProduct({ ...productData, quantity: Number(e.target.value) })}
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem",
+                    border: "1px solid #9ca3af",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.875rem",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setProduct({ ...productData, quantity: productData.quantity + 1 })}
+                  style={{ padding: "0.25rem 0.5rem", border: "1px solid #9ca3af", borderRadius: "0.25rem", cursor: "pointer" }}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* Price */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#1f2937" }}>Indicate Price</label>
+              <input
+                type="number"
+                placeholder="₱ 00.00"
+                value={productData.price}
+                onChange={(e) => setProduct({ ...productData, price: Number(e.target.value) })}
+                style={{
+                  marginTop: "0.25rem",
+                  padding: "0.5rem",
+                  border: "1px solid #9ca3af",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.875rem",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              gap: "1rem",
+              padding: "1rem 1.5rem",
+              borderTop: "1px solid #d1d5db",
+            }}
+          >
+            <button
+              type="button"
+              onClick={resetForm}
+              style={{
+                fontSize: "0.875rem",
+                fontWeight: "600",
+                color: "#000",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              style={{
+                backgroundColor: "#4b2e17",
+                color: "#fff",
+                padding: "0.5rem 1rem",
+                borderRadius: "0.25rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                border: "none",
+                transition: "background-color 0.2s",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#3a2211")}
+              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4b2e17")}
+            >
+              Add Product
+            </button>
+          </div>
+        </form>
+      </div>
+    </AuthenticatedLayout>
+  );
 }

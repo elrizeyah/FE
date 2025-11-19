@@ -1,149 +1,163 @@
-// resources/js/Pages/Reports/CreateReport.jsx
+import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
 export default function GenerateReport() {
-    return (
-        <AuthenticatedLayout>
+  // Mock data
+  const [sales] = useState([
+    { id: 1, date: "2025-11-18", amount: 1500 },
+    { id: 2, date: "2025-11-19", amount: 2300 },
+  ]);
 
-            <div className="py-12 px-6">
-                <div>
-                    <h1
-                        className="text-4xl font-extrabold text-[#4b2e17] drop-shadow-sm"
-                        style={{
-                            WebkitTextStroke: ".8px #000000",
-                            backgroundImage: "linear-gradient(to bottom, #ec8845ff, #3b1f0d)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                            lineHeight: "1.3",
-                            fontSize: "3rem",
-                            marginLeft: "5rem",
-                            marginTop:"-5rem",
-                            marginBottom:"1rem"
-                        }}
-                    >
-                        Create Report
-                    </h1>
-               
+  const [capital] = useState([
+    { id: 1, date: "2025-11-18", amount: 5000 },
+    { id: 2, date: "2025-11-19", amount: 7500 },
+  ]);
 
-                    {/* Buttons */}
-                    <div className="space-y-4 mb-10">
-  <button
-  className="block text-left border border-[#4b2e17] text-black font-bold px-8 py-3 bg-[#f9f5f0] hover:bg-[#e8d4b8] transition-colors duration-200
-  w-full sm:w-[50rem] lg:w-[68rem] mx-auto text-2xl"
->
-  Generate Sales Report
-</button>
+  const handleGenerateSales = () => {
+    alert("Sales Report Generated!");
+  };
 
+  const handleGenerateCapital = () => {
+    alert("Capital Report Generated!");
+  };
 
-  <button
-    className="block text-left border border-[#4b2e17] text-black font-bold px-8 py-3 bg-[#f9f5f0] hover:bg-[#e8d4b8] transition-colors duration-200
-    w-full sm:w-[50rem] lg:w-[68rem] mx-auto text-2xl"
-  >
-    Generate Capital Report
-  </button>
-</div>
+  return (
+    <AuthenticatedLayout>
+      <div style={{ padding: "3rem 1.5rem" }}>
+        <h1
+          style={{
+            WebkitTextStroke: ".8px #000",
+            backgroundImage: "linear-gradient(to bottom, #ec8845ff, #3b1f0d)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            lineHeight: "1.3",
+            fontSize: "3rem",
+            marginLeft: "5rem",
+            marginTop: "-5rem",
+            marginBottom: "1rem",
+            fontWeight: "800",
+            textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+          }}
+        >
+          Create Report
+        </h1>
 
+        {/* Buttons */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "2.5rem", maxWidth: "68rem", marginLeft: "auto", marginRight: "auto" }}>
+          <button
+            onClick={handleGenerateSales}
+            style={{
+              textAlign: "left",
+              border: "2px solid #4b2e17",
+              color: "#000",
+              fontWeight: "bold",
+              padding: "0.75rem 2rem",
+              backgroundColor: "#f9f5f0",
+              cursor: "pointer",
+              fontSize: "2rem",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
+          >
+            Generate Sales Report
+          </button>
 
-                    {/* Sales and Capital History Tables */}
-<div className="space-y-12 mx-auto w-full sm:w-[50rem] lg:w-[68rem]">
+          <button
+            onClick={handleGenerateCapital}
+            style={{
+              textAlign: "left",
+              border: "2px solid #4b2e17",
+              color: "#000",
+              fontWeight: "bold",
+              padding: "0.75rem 2rem",
+              backgroundColor: "#f9f5f0",
+              cursor: "pointer",
+              fontSize: "2rem",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
+          >
+            Generate Capital Report
+          </button>
+        </div>
 
-  {/* 🟫 Sales History Box */}
-<section className="mb-10">
-  <h2 className="text-2xl font-bold text-[#2e1a0e] mb-4">
-    Sales History
-  </h2>
-
-  {/* Outer Box */}
-  <div className="border border-black bg-white p-4 shadow-[6px_6px_0px_rgba(0,0,0,0.3)]">
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm border-collapse">
-        <thead>
-          <tr className="bg-[#d6d6d6] text-black">
-            <th className="border-b border-[#4b2e17] px-6 py-3 text-center w-1/4">
-              Sales Transaction #
-            </th>
-            <th className="border-b border-[#4b2e17] px-6 py-3 text-center w-1/4">
-              Date
-            </th>
-            <th className="border-b border-[#4b2e17] px-6 py-3 text-center w-1/4">
-              Total Sales
-            </th>
-            <th className="border-b border-[#4b2e17] px-4 py-3 w-1/6"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {sales?.length ? (
-            sales.map((item, index) => (
-              <tr key={index} className="hover:bg-[#f9f5f0] text-center">
-                <td className="border-b border-gray-300 px-6 py-2">#{item.id}</td>
-                <td className="border-b border-gray-300 px-6 py-2">{item.date}</td>
-                <td className="border-b border-gray-300 px-6 py-2">₱ {item.amount}</td>
-                <td className="border-b border-gray-300 px-4 py-2 text-right">→</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="text-center py-4 text-gray-600">
-                No sales records found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-{/* 🟫 Capital History Box */}
-<section>
-  <h2 className="text-2xl font-bold text-[#2e1a0e] mb-4">
-    Capital History
-  </h2>
-
-  {/* Outer Box */}
-  <div className="border border-black bg-white p-4 shadow-[6px_6px_0px_rgba(0,0,0,0.3)]">
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm border-collapse">
-        <thead>
-          <tr className="bg-[#d6d6d6] text-black">
-            <th className="border-b border-[#4b2e17] px-6 py-3 text-center w-1/4">
-              Capital #
-            </th>
-            <th className="border-b border-[#4b2e17] px-6 py-3 text-center w-1/4">
-              Date
-            </th>
-            <th className="border-b border-[#4b2e17] px-6 py-3 text-center w-1/4">
-              Total Capital
-            </th>
-            <th className="border-b border-[#4b2e17] px-4 py-3 w-1/6"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {capital?.length ? (
-            capital.map((item, index) => (
-              <tr key={index} className="hover:bg-[#f9f5f0] text-center">
-                <td className="border-b border-gray-300 px-6 py-2">#{item.id}</td>
-                <td className="border-b border-gray-300 px-6 py-2">{item.date}</td>
-                <td className="border-b border-gray-300 px-6 py-2">₱ {item.amount}</td>
-                <td className="border-b border-gray-300 px-4 py-2 text-right">→</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="text-center py-4 text-gray-600">
-                No capital records found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-</div>
-                </div>
+        {/* Tables Container */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "3rem", maxWidth: "68rem", marginLeft: "auto", marginRight: "auto" }}>
+          {/* Sales History */}
+          <section>
+            <h2 style={{ fontSize: "2rem", fontWeight: "bold", color: "#2e1a0e", marginBottom: "1rem" }}>
+              Sales History
+            </h2>
+            <div style={{ border: "2px solid black", backgroundColor: "#fff", padding: "1rem", boxShadow: "6px 6px 0 rgba(0,0,0,0.3)", overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
+                <thead style={{ backgroundColor: "#d6d6d6", color: "#000" }}>
+                  <tr>
+                    <th style={{ borderBottom: "2px solid #4b2e17", padding: "0.75rem", textAlign: "center" }}>Sales Transaction #</th>
+                    <th style={{ borderBottom: "2px solid #4b2e17", padding: "0.75rem", textAlign: "center" }}>Date</th>
+                    <th style={{ borderBottom: "2px solid #4b2e17", padding: "0.75rem", textAlign: "center" }}>Total Sales</th>
+                    <th style={{ borderBottom: "2px solid #4b2e17", padding: "0.75rem" }}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sales.length ? (
+                    sales.map((item, idx) => (
+                      <tr key={idx} style={{ textAlign: "center", cursor: "pointer" }}>
+                        <td style={{ borderBottom: "1px solid #ccc", padding: "0.5rem" }}>#{item.id}</td>
+                        <td style={{ borderBottom: "1px solid #ccc", padding: "0.5rem" }}>{item.date}</td>
+                        <td style={{ borderBottom: "1px solid #ccc", padding: "0.5rem" }}>₱ {item.amount}</td>
+                        <td style={{ borderBottom: "1px solid #ccc", padding: "0.5rem", textAlign: "right" }}>→</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" style={{ textAlign: "center", padding: "1rem", color: "#666" }}>
+                        No sales records found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
-        </AuthenticatedLayout>
-    );
+          </section>
+
+          {/* Capital History */}
+          <section>
+            <h2 style={{ fontSize: "2rem", fontWeight: "bold", color: "#2e1a0e", marginBottom: "1rem" }}>
+              Capital History
+            </h2>
+            <div style={{ border: "2px solid black", backgroundColor: "#fff", padding: "1rem", boxShadow: "6px 6px 0 rgba(0,0,0,0.3)", overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
+                <thead style={{ backgroundColor: "#d6d6d6", color: "#000" }}>
+                  <tr>
+                    <th style={{ borderBottom: "2px solid #4b2e17", padding: "0.75rem", textAlign: "center" }}>Capital #</th>
+                    <th style={{ borderBottom: "2px solid #4b2e17", padding: "0.75rem", textAlign: "center" }}>Date</th>
+                    <th style={{ borderBottom: "2px solid #4b2e17", padding: "0.75rem", textAlign: "center" }}>Total Capital</th>
+                    <th style={{ borderBottom: "2px solid #4b2e17", padding: "0.75rem" }}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {capital.length ? (
+                    capital.map((item, idx) => (
+                      <tr key={idx} style={{ textAlign: "center", cursor: "pointer" }}>
+                        <td style={{ borderBottom: "1px solid #ccc", padding: "0.5rem" }}>#{item.id}</td>
+                        <td style={{ borderBottom: "1px solid #ccc", padding: "0.5rem" }}>{item.date}</td>
+                        <td style={{ borderBottom: "1px solid #ccc", padding: "0.5rem" }}>₱ {item.amount}</td>
+                        <td style={{ borderBottom: "1px solid #ccc", padding: "0.5rem", textAlign: "right" }}>→</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" style={{ textAlign: "center", padding: "1rem", color: "#666" }}>
+                        No capital records found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </AuthenticatedLayout>
+  );
 }

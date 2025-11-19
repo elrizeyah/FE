@@ -1,75 +1,183 @@
-import React from "react";
-import { router } from "@inertiajs/react";
+import React, { useState } from "react";
 import EditProduct from "./EditProduct";
 import DeleteButton from "./DeleteButton";
 
-export default function Inventory({ products = [] }) {
-    const inc = (id, qty) =>
-        router.put(route("update-iteminc", id), { quantity: qty });
-    const dec = (id, qty) =>
-        router.put(route("update-itemdec", id), { quantity: qty });
+export default function Inventory({ initialProducts = [] }) {
+  const [products, setProducts] = useState(initialProducts);
 
-    const brownButton =
-        "bg-[#4b2e17] text-white font-semibold px-4 py-2 rounded-lg hover:bg-[#3a2312] transition-colors";
-    const redButton =
-        "bg-red-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-700 transition-colors";
-
-    return (
-        <div className="space-y-6">
-
-            {products.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {products.map((item) => (
-                        <div
-  key={item.id}
-  className="bg-white p-4 rounded-2xl border border-[#e2cdbf] flex flex-col items-start space-y-2
-             transform transition duration-300 hover:scale-105 hover:border-[#4b2e17] hover:shadow-lg hover:shadow-[#4b2e17]/30"
->
-    {item.file_path && (
-        <img
-            src={`/${item.file_path}`}
-            alt={item.name}
-            className="w-full h-40 object-cover rounded-lg mb-2"
-            onError={(e) => (e.target.style.display = "none")}
-        />
-    )}
-
-    <h3 className="text-lg font-bold text-gray-900">{item.name}</h3>
-    <p className="text-gray-700">Category: {item.category}</p>
-    <p className="text-gray-700">Quantity: {item.quantity}</p>
-    <p className="text-gray-700">Price: ₱{item.price}</p>
-
-    {/* + / - buttons */}
-    <div className="w-full flex justify-center items-center mt-2">
-        <div className="flex space-x-4">
-            <button
-                className="w-12 h-12 rounded-full flex items-center justify-center border border-[#4b2e17] text-[#4b2e17] font-bold text-lg hover:bg-[#4b2e17] hover:text-white transition-colors"
-                onClick={() => dec(item.id, item.quantity)}
-            >
-                -
-            </button>
-            <button
-                className="w-12 h-12 rounded-full flex items-center justify-center border border-[#4b2e17] text-[#4b2e17] font-bold text-lg hover:bg-[#4b2e17] hover:text-white transition-colors"
-                onClick={() => inc(item.id, item.quantity)}
-            >
-                +
-            </button>
-        </div>
-    </div>
-
-    {/* Edit/Delete stacked */}
-    <div className="flex flex-col items-center space-y-2 mt-4 w-full">
-        <EditProduct product={item} className={brownButton} />
-        <DeleteButton id={item.id} className={redButton} />
-    </div>
-</div>
-
-                        
-                    ))}
-                </div>
-            ) : (
-                <p className="text-gray-500">No products found in inventory.</p>
-            )}
-        </div>
+  // Increment quantity
+  const inc = (id) => {
+    setProducts((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
     );
+  };
+
+  // Decrement quantity
+  const dec = (id) => {
+    setProducts((prev) =>
+      prev.map((item) =>
+        item.id === id && item.quantity > 0
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
+  };
+
+  const brownButton = {
+    backgroundColor: "#4b2e17",
+    color: "#fff",
+    fontWeight: "600",
+    padding: "8px 16px",
+    borderRadius: "0.5rem",
+    border: "none",
+    cursor: "pointer",
+    transition: "0.2s",
+    width: "100%",
+  };
+
+  const redButton = {
+    backgroundColor: "#dc2626",
+    color: "#fff",
+    fontWeight: "600",
+    padding: "8px 16px",
+    borderRadius: "0.5rem",
+    border: "none",
+    cursor: "pointer",
+    transition: "0.2s",
+    width: "100%",
+  };
+
+  const cardStyle = {
+    backgroundColor: "#fff",
+    padding: "16px",
+    borderRadius: "1rem",
+    border: "1px solid #e2cdbf",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "8px",
+    transition: "transform 0.3s, box-shadow 0.3s, border-color 0.3s",
+  };
+
+  const cardHover = {
+    transform: "scale(1.05)",
+    borderColor: "#4b2e17",
+    boxShadow: "0 10px 15px rgba(75, 46, 23, 0.3)",
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      {products.length > 0 ? (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "24px",
+          }}
+        >
+          {products.map((item) => (
+            <div
+              key={item.id}
+              style={cardStyle}
+              onMouseEnter={(e) =>
+                Object.assign(e.currentTarget.style, cardHover)
+              }
+              onMouseLeave={(e) => Object.assign(e.currentTarget.style, cardStyle)}
+            >
+              {item.file_path && (
+                <img
+                  src={item.file_path}
+                  alt={item.name}
+                  style={{
+                    width: "100%",
+                    height: "160px",
+                    objectFit: "cover",
+                    borderRadius: "0.5rem",
+                    marginBottom: "8px",
+                  }}
+                  onError={(e) => (e.currentTarget.style.display = "none")}
+                />
+              )}
+
+              <h3 style={{ fontSize: "1.125rem", fontWeight: "bold", color: "#111" }}>
+                {item.name}
+              </h3>
+              <p style={{ color: "#374151" }}>Category: {item.category}</p>
+              <p style={{ color: "#374151" }}>Quantity: {item.quantity}</p>
+              <p style={{ color: "#374151" }}>Price: ₱{item.price}</p>
+
+              {/* + / - buttons */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "16px",
+                  marginTop: "8px",
+                }}
+              >
+                <button
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    borderRadius: "50%",
+                    border: "1px solid #4b2e17",
+                    fontWeight: "bold",
+                    color: "#4b2e17",
+                    cursor: "pointer",
+                    fontSize: "1.25rem",
+                    transition: "0.2s",
+                  }}
+                  onClick={() => dec(item.id)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#4b2e17";
+                    e.currentTarget.style.color = "#fff";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "#4b2e17";
+                  }}
+                >
+                  -
+                </button>
+                <button
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    borderRadius: "50%",
+                    border: "1px solid #4b2e17",
+                    fontWeight: "bold",
+                    color: "#4b2e17",
+                    cursor: "pointer",
+                    fontSize: "1.25rem",
+                    transition: "0.2s",
+                  }}
+                  onClick={() => inc(item.id)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#4b2e17";
+                    e.currentTarget.style.color = "#fff";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "#4b2e17";
+                  }}
+                >
+                  +
+                </button>
+              </div>
+
+              {/* Edit/Delete buttons */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "16px", width: "100%" }}>
+                <EditProduct product={item} style={brownButton} />
+                <DeleteButton style={redButton} />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p style={{ color: "#6b7280" }}>No products found in inventory.</p>
+      )}
+    </div>
+  );
 }

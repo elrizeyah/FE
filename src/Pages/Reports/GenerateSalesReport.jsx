@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { useNavigate } from "react-router-dom";
 
 export default function GenerateSalesReport() {
-  const navigate = useNavigate();
   const [reportType, setReportType] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  // Map report types to routes
   const routeMap = {
     Daily: "/generate-sales-report/daily",
     Weekly: "/generate-sales-report/weekly",
@@ -24,57 +21,141 @@ export default function GenerateSalesReport() {
         alert("Please select both start and end dates for the custom report.");
         return;
       }
-      navigate(routeMap[reportType] + `?from=${fromDate}&to=${toDate}`);
+      window.location.href = routeMap[reportType] + `?from=${fromDate}&to=${toDate}`;
     } else {
-      navigate(routeMap[reportType]);
+      window.location.href = routeMap[reportType];
     }
   };
 
+  const containerStyle = {
+    maxWidth: "48rem",
+    margin: "2.5rem auto 0",
+    padding: "1.5rem",
+    backgroundColor: "white",
+    borderRadius: "1rem",
+    border: "1px solid #d7bfa0",
+    boxShadow: "0 10px 15px rgba(0,0,0,0.1)",
+  };
+
+  const headerStyle = {
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    marginBottom: "1.5rem",
+    color: "#4b2e17",
+  };
+
+  const paragraphStyle = {
+    marginBottom: "1rem",
+    color: "#4b5563",
+  };
+
+  const radioContainerStyle = (selected) => ({
+    cursor: "pointer",
+    borderRadius: "0.5rem",
+    padding: "1rem",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    position: "relative",
+    paddingLeft: "2.5rem",
+    transition: "all 0.3s",
+    border: selected ? "2px solid #4b2e17" : "2px solid #e0d6c4",
+    backgroundColor: selected ? "#f3dfc3" : "#f9f5f0",
+    boxShadow: selected ? "0 4px 6px rgba(0,0,0,0.1)" : "none",
+  });
+
+  const radioOuterCircleStyle = (selected) => ({
+    position: "absolute",
+    left: "0.75rem",
+    top: "50%",
+    transform: "translateY(-50%)",
+    width: "1.25rem",
+    height: "1.25rem",
+    borderRadius: "50%",
+    border: selected ? "2px solid #4b2e17" : "2px solid gray",
+    backgroundColor: selected ? "#4b2e17" : "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  });
+
+  const radioInnerCircleStyle = {
+    width: "0.5rem",
+    height: "0.5rem",
+    borderRadius: "50%",
+    backgroundColor: "white",
+  };
+
+  const labelTextStyle = {
+    fontWeight: "600",
+    color: "#4b2e17",
+  };
+
+  const labelSubTextStyle = {
+    fontSize: "0.875rem",
+    color: "#6b7280",
+  };
+
+  const dateInputStyle = {
+    width: "100%",
+    padding: "0.5rem",
+    border: "1px solid #d1d5db",
+    borderRadius: "0.375rem",
+    outline: "none",
+  };
+
+  const buttonStyle = {
+    padding: "0.5rem 1.5rem",
+    borderRadius: "0.375rem",
+    fontWeight: "bold",
+    border: "2px solid #4b2e17",
+    cursor: "pointer",
+    transition: "all 0.3s",
+  };
+
+  const cancelButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "white",
+    color: "#374151",
+    border: "1px solid #d1d5db",
+  };
+
+  const generateButtonStyle = reportType
+    ? {
+        ...buttonStyle,
+        backgroundColor: "#4b2e17",
+        color: "white",
+        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+      }
+    : {
+        ...buttonStyle,
+        backgroundColor: "#f9f5f0",
+        color: "#9ca3af",
+        cursor: "not-allowed",
+      };
+
   return (
     <AuthenticatedLayout>
+      <div style={containerStyle}>
+        <h1 style={headerStyle}>Select Sales Report Date Range</h1>
+        <p style={paragraphStyle}>Choose a date range to generate your sales report.</p>
 
-      <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl border border-[#d7bfa0] shadow-lg">
-        <h1 className="text-2xl font-bold mb-6 text-[#4b2e17]">
-          Select Sales Report Date Range
-        </h1>
-        <p className="mb-4 text-gray-700">
-          Choose a date range to generate your sales report.
-        </p>
-
-        {/* ✅ Report Type Selection */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
           {["Daily", "Weekly", "Monthly", "Custom"].map((type) => (
-            <label
-              key={type}
-              className={`cursor-pointer border rounded-lg p-4 flex flex-col items-start relative pl-10 transition-all duration-300 ${
-                reportType === type
-                  ? "border-[#4b2e17] bg-[#f3dfc3] shadow-md"
-                  : "border-[#e0d6c4] bg-[#f9f5f0] hover:border-[#c49a6c] hover:bg-[#f5ebdd]"
-              }`}
-            >
+            <label key={type} style={radioContainerStyle(reportType === type)}>
               <input
                 type="radio"
                 name="reportType"
                 value={type}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 opacity-0"
                 checked={reportType === type}
                 onChange={() => setReportType(type)}
+                style={{ display: "none" }}
               />
-
-              <span
-                className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full border flex items-center justify-center ${
-                  reportType === type
-                    ? "border-[#4b2e17] bg-[#4b2e17]"
-                    : "border-gray-400 bg-white"
-                }`}
-              >
-                {reportType === type && (
-                  <span className="w-2 h-2 bg-white rounded-full"></span>
-                )}
+              <span style={radioOuterCircleStyle(reportType === type)}>
+                {reportType === type && <span style={radioInnerCircleStyle}></span>}
               </span>
-
-              <span className="font-semibold text-[#4b2e17]">{type}</span>
-              <span className="text-gray-500 text-sm">
+              <span style={labelTextStyle}>{type}</span>
+              <span style={labelSubTextStyle}>
                 {type === "Daily" && "Pick a single date"}
                 {type === "Weekly" && "Choose a week"}
                 {type === "Monthly" && "Select a month"}
@@ -84,52 +165,34 @@ export default function GenerateSalesReport() {
           ))}
         </div>
 
-        {/* ✅ Custom Date Range */}
         {reportType === "Custom" && (
-          <div className="mb-6 grid grid-cols-2 gap-4">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                From
-              </label>
+              <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: "500", color: "#374151" }}>From</label>
               <input
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-[#c5a888] outline-none"
+                style={dateInputStyle}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                To
-              </label>
+              <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: "500", color: "#374151" }}>To</label>
               <input
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-[#c5a888] outline-none"
+                style={dateInputStyle}
               />
             </div>
           </div>
         )}
 
-        {/* ✅ Buttons */}
-        <div className="flex justify-end gap-4">
-          <button
-            onClick={() => navigate("/sales-report")}
-            className="px-6 py-2 border border-gray-400 rounded-md font-medium text-gray-700 hover:bg-gray-200 hover:text-[#4b2e17] hover:shadow transition-all"
-          >
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <button style={cancelButtonStyle} onClick={() => (window.location.href = "/sales-report")}>
             Cancel
           </button>
-
-          <button
-            className={`px-6 py-2 border border-[#4b2e17] font-bold rounded-md transition-all ${
-              reportType
-                ? "bg-[#4b2e17] text-white hover:bg-[#6b3e1f] shadow-md"
-                : "bg-[#f9f5f0] text-gray-400 cursor-not-allowed"
-            }`}
-            disabled={!reportType}
-            onClick={handleGenerate}
-          >
+          <button style={generateButtonStyle} disabled={!reportType} onClick={handleGenerate}>
             Generate Report
           </button>
         </div>

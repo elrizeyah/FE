@@ -1,65 +1,61 @@
-import {
-    Dialog,
-    DialogPanel,
-    Transition,
-    TransitionChild,
-} from '@headlessui/react';
+import React from "react";
 
 export default function Modal({
-    children,
-    show = false,
-    maxWidth = '2xl',
-    closeable = true,
-    onClose = () => {},
+  children,
+  show = false,
+  maxWidth = "2xl",
+  closeable = true,
+  onClose = () => {},
 }) {
-    const close = () => {
-        if (closeable) {
-            onClose();
-        }
-    };
+  if (!show) return null;
 
-    const maxWidthClass = {
-        sm: 'sm:max-w-sm',
-        md: 'sm:max-w-md',
-        lg: 'sm:max-w-lg',
-        xl: 'sm:max-w-xl',
-        '2xl': 'sm:max-w-2xl',
-    }[maxWidth];
+  const close = () => {
+    if (closeable) onClose();
+  };
 
-    return (
-        <Transition show={show} leave="duration-200">
-            <Dialog
-                as="div"
-                id="modal"
-                className="fixed inset-0 z-50 flex transform items-center overflow-y-auto px-4 py-6 transition-all sm:px-0"
-                onClose={close}
-            >
-                <TransitionChild
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                >
-                    <div className="absolute inset-0 bg-gray-500/75" />
-                </TransitionChild>
+  // Map maxWidth to pixels
+  const maxWidthMap = {
+    sm: 320,
+    md: 384,
+    lg: 448,
+    xl: 512,
+    "2xl": 672,
+  };
+  const modalWidth = maxWidthMap[maxWidth] || maxWidthMap["2xl"];
 
-                <TransitionChild
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                    enterTo="opacity-100 translate-y-0 sm:scale-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                    leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                    <DialogPanel
-                        className={`mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full ${maxWidthClass}`}
-                    >
-                        {children}
-                    </DialogPanel>
-                </TransitionChild>
-            </Dialog>
-        </Transition>
-    );
+  const overlayStyle = {
+    position: "fixed",
+    inset: 0,
+    backgroundColor: "rgba(107, 114, 128, 0.75)", // gray-500/75
+    zIndex: 50,
+  };
+
+  const containerStyle = {
+    position: "fixed",
+    inset: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    overflowY: "auto",
+    padding: "1.5rem",
+    zIndex: 50,
+  };
+
+  const panelStyle = {
+    width: "100%",
+    maxWidth: `${modalWidth}px`,
+    marginBottom: "1.5rem",
+    backgroundColor: "#ffffff",
+    borderRadius: "0.5rem",
+    overflow: "hidden",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+    transition: "all 0.3s ease-in-out",
+  };
+
+  return (
+    <div style={containerStyle}>
+      <div style={overlayStyle} onClick={close}></div>
+      <div style={panelStyle}>{children}</div>
+    </div>
+  );
 }

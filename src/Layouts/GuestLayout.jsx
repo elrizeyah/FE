@@ -1,9 +1,30 @@
 export default function GuestLayout({ children }) {
-    return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
-                {children}
-            </div>
-        </div>
-    );
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f3f4f6", // gray-100
+        paddingTop: "1.5rem",
+        paddingBottom: "1.5rem",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "400px", // similar to sm:max-w-md
+          backgroundColor: "#fff",
+          padding: "1.5rem",
+          borderRadius: "12px", // rounded-lg
+          boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+          overflow: "hidden",
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
 }

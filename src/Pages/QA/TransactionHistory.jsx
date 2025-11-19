@@ -1,22 +1,70 @@
+import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { useState } from "react";
 
-export default function TransactionHistory() {
+export default function TransactionHistory({ transactions = [], user }) {
   const [search, setSearch] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
+
+  // Filter transactions based on search and date
+  const filteredTransactions = transactions.filter((t) => {
+    const matchesSearch = !search || t.id.toString().includes(search);
+    const matchesDate = !dateFilter || t.date?.startsWith(dateFilter);
+    return matchesSearch && matchesDate;
+  });
+
+  // Mock data if no transactions provided
+  const displayTransactions =
+    filteredTransactions.length > 0
+      ? filteredTransactions
+      : [
+          { id: 1, date: "2025-11-18 - 3:45 PM", amount: 5000, method: "Cash" },
+          { id: 2, date: "2025-11-19 - 4:30 PM", amount: 7500, method: "Card" },
+        ];
 
   return (
-    <AuthenticatedLayout>
-
-      <div className="p-6">
-        <h1 className="text-3xl font-bold text-center text-black mb-6">
+    <AuthenticatedLayout user={user}>
+      <div style={{ padding: "1.5rem" }}>
+        <h1
+          style={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            textAlign: "center",
+            color: "#000",
+            marginBottom: "1.5rem",
+          }}
+        >
           Transaction Records List
         </h1>
 
         {/* Search Section */}
-        <div className="border border-black shadow-[5px_5px_0px_gray] bg-white max-w-5xl mx-auto p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mb-4">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-[#4b2e17] mb-1">
+        <div
+          style={{
+            border: "1px solid black",
+            boxShadow: "5px 5px 0 gray",
+            backgroundColor: "#fff",
+            maxWidth: "80rem",
+            margin: "0 auto",
+            padding: "1.25rem",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+              marginBottom: "1rem",
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.875rem",
+                  fontWeight: "600",
+                  color: "#4b2e17",
+                  marginBottom: "0.25rem",
+                }}
+              >
                 Search for Transaction:
               </label>
               <input
@@ -24,64 +72,103 @@ export default function TransactionHistory() {
                 placeholder="Input Transaction Number"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full border border-gray-400 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-[#c5a888] outline-none"
+                style={{
+                  width: "100%",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.375rem",
+                  padding: "0.5rem",
+                  fontSize: "0.875rem",
+                  outline: "none",
+                }}
               />
             </div>
 
-            <div className="flex-1 mt-3 sm:mt-0">
-              <label className="block text-sm font-medium text-[#4b2e17] mb-1">
+            <div style={{ flex: 1 }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.875rem",
+                  fontWeight: "600",
+                  color: "#4b2e17",
+                  marginBottom: "0.25rem",
+                }}
+              >
                 Date:
               </label>
               <input
                 type="date"
-                className="w-full border border-gray-400 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-[#c5a888] outline-none"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                style={{
+                  width: "100%",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.375rem",
+                  padding: "0.5rem",
+                  fontSize: "0.875rem",
+                  outline: "none",
+                }}
               />
             </div>
           </div>
 
           {/* Transaction Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse">
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-700 px-3 py-2">
+                <tr style={{ backgroundColor: "#f0f0f0" }}>
+                  <th style={{ border: "1px solid #444", padding: "0.5rem" }}>
                     Transaction Number
                   </th>
-                  <th className="border border-gray-700 px-3 py-2">
+                  <th style={{ border: "1px solid #444", padding: "0.5rem" }}>
                     Date and Time
                   </th>
-                  <th className="border border-gray-700 px-3 py-2">
-                    Total Amount
-                  </th>
-                  <th className="border border-gray-700 px-3 py-2">
-                    Payment Method
-                  </th>
-                  <th className="border border-gray-700 px-3 py-2"></th>
+                  <th style={{ border: "1px solid #444", padding: "0.5rem" }}>Total Amount</th>
+                  <th style={{ border: "1px solid #444", padding: "0.5rem" }}>Payment Method</th>
+                  <th style={{ border: "1px solid #444", padding: "0.5rem" }}></th>
                 </tr>
               </thead>
               <tbody>
-                {transactions.length ? (
-                  transactions.map((t, i) => (
+                {displayTransactions.length ? (
+                  displayTransactions.map((t, i) => (
                     <tr
                       key={i}
-                      className={`${
-                        i % 2 === 0 ? "bg-[#fffaf6]" : "bg-[#f6ebdf]"
-                      } hover:bg-[#f9f5f0] transition`}
+                      style={{
+                        backgroundColor: i % 2 === 0 ? "#fffaf6" : "#f6ebdf",
+                        transition: "background-color 0.2s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = i % 2 === 0 ? "#fffaf6" : "#f6ebdf")
+                      }
                     >
-                      <td className="border border-gray-400 px-3 py-2 text-[#2e1a0e]">
+                      <td style={{ border: "1px solid #ccc", padding: "0.5rem", color: "#2e1a0e" }}>
                         #{t.id.toString().padStart(10, "0")}
                       </td>
-                      <td className="border border-gray-400 px-3 py-2 text-[#2e1a0e]">
-                        {t.date || "9/28/2025 - 4:37 PM"}
+                      <td style={{ border: "1px solid #ccc", padding: "0.5rem", color: "#2e1a0e" }}>
+                        {t.date}
                       </td>
-                      <td className="border border-gray-400 px-3 py-2 text-[#2e1a0e]">
-                        ₱ {t.amount?.toLocaleString() || "5,000.00"}
+                      <td style={{ border: "1px solid #ccc", padding: "0.5rem", color: "#2e1a0e" }}>
+                        ₱ {t.amount.toLocaleString()}
                       </td>
-                      <td className="border border-gray-400 px-3 py-2 text-[#2e1a0e]">
-                        {t.method || (i % 2 === 0 ? "Cash" : "Card")}
+                      <td style={{ border: "1px solid #ccc", padding: "0.5rem", color: "#2e1a0e" }}>
+                        {t.method}
                       </td>
-                      <td className="border border-gray-400 px-3 py-2 text-center">
-                        <button className="bg-[#4b2e17] text-white px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-[#6b3e1f] transition">
+                      <td style={{ border: "1px solid #ccc", padding: "0.5rem", textAlign: "center" }}>
+                        <button
+                          onClick={() => alert(`Show more for transaction #${t.id}`)}
+                          style={{
+                            backgroundColor: "#4b2e17",
+                            color: "#fff",
+                            padding: "0.25rem 0.5rem",
+                            borderRadius: "0.375rem",
+                            fontSize: "0.75rem",
+                            fontWeight: "600",
+                            cursor: "pointer",
+                            transition: "background-color 0.2s",
+                          }}
+                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#6b3e1f")}
+                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#4b2e17")}
+                        >
                           Show More
                         </button>
                       </td>
@@ -91,7 +178,12 @@ export default function TransactionHistory() {
                   <tr>
                     <td
                       colSpan="5"
-                      className="text-center py-4 text-[#4b2e17] font-medium"
+                      style={{
+                        textAlign: "center",
+                        padding: "1rem",
+                        color: "#4b2e17",
+                        fontWeight: "500",
+                      }}
                     >
                       No transaction records found.
                     </td>

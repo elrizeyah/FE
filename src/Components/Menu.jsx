@@ -1,16 +1,53 @@
+import React from "react";
+
 export default function Menu({ toggleMenu }) {
-    return (
-        <button 
-            className="menu-icon cursor-pointer p-3 rounded hover:bg-gray-200 transition z-50 relative" 
-            onClick={toggleMenu} 
-            title="Menu"
-            aria-label="Toggle menu"
-        >
-            <div className="flex flex-col justify-center items-center space-y-1.5">
-                <span className="block w-6 h-0.5 bg-gray-700"></span>
-                <span className="block w-6 h-0.5 bg-gray-700"></span>
-                <span className="block w-6 h-0.5 bg-gray-700"></span>
-            </div>
-        </button>
-    );
+  const buttonStyle = {
+    cursor: "pointer",
+    padding: "12px",
+    borderRadius: "0.5rem",
+    backgroundColor: "transparent",
+    border: "none",
+    position: "relative",
+    zIndex: 50,
+    transition: "background-color 0.2s",
+  };
+
+  const buttonHoverStyle = {
+    backgroundColor: "#e5e7eb", // light gray on hover
+  };
+
+  const lineStyle = {
+    display: "block",
+    width: "24px",
+    height: "2px",
+    backgroundColor: "#374151", // gray-700
+    borderRadius: "1px",
+  };
+
+  const containerStyle = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "6px",
+  };
+
+  const [hover, setHover] = React.useState(false);
+
+  return (
+    <button
+      onClick={toggleMenu}
+      title="Menu"
+      aria-label="Toggle menu"
+      style={{ ...buttonStyle, ...(hover ? buttonHoverStyle : {}) }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div style={containerStyle}>
+        <span style={lineStyle}></span>
+        <span style={lineStyle}></span>
+        <span style={lineStyle}></span>
+      </div>
+    </button>
+  );
 }

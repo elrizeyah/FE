@@ -1,122 +1,187 @@
 import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { useNavigate } from "react-router-dom";
 
 export default function GenerateCapitalReport() {
-    const navigate = useNavigate();
-    const [reportType, setReportType] = useState("");
-    const [fromDate, setFromDate] = useState("");
-    const [toDate, setToDate] = useState("");
+  const [reportType, setReportType] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
-    // Map report types to routes
-    const routeMap = {
-        Daily: "/generate-capital-report/daily",
-        Weekly: "/generate-capital-report/weekly",
-        Monthly: "/generate-capital-report/monthly",
-        Custom: "/generate-capital-report/custom",
-    };
+  const routeMap = {
+    Daily: "/generate-capital-report/daily",
+    Weekly: "/generate-capital-report/weekly",
+    Monthly: "/generate-capital-report/monthly",
+    Custom: "/generate-capital-report/custom",
+  };
 
-    const handleGenerate = () => {
-        if (!reportType) return;
+  const handleGenerate = () => {
+    if (!reportType) return;
 
-        if (reportType === "Custom") {
-            if (!fromDate || !toDate) {
-                alert("Please select both start and end dates for the custom report.");
-                return;
-            }
-            navigate(routeMap[reportType] + `?from=${fromDate}&to=${toDate}`);
-        } else {
-            navigate(routeMap[reportType]);
-        }
-    };
+    if (reportType === "Custom") {
+      if (!fromDate || !toDate) {
+        alert("Please select both start and end dates for the custom report.");
+        return;
+      }
+      window.location.href = routeMap[reportType] + `?from=${fromDate}&to=${toDate}`;
+    } else {
+      window.location.href = routeMap[reportType];
+    }
+  };
 
-    return (
-        <AuthenticatedLayout>
+  const containerStyle = {
+    maxWidth: "48rem",
+    margin: "2.5rem auto 0",
+    padding: "1.5rem",
+    backgroundColor: "white",
+    borderRadius: "1rem",
+    border: "1px solid #d7bfa0",
+  };
 
-            <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl border border-[#d7bfa0]">
-                <h1 className="text-2xl font-bold mb-6">Select Capital Report Date Range</h1>
-                <p className="mb-4 text-gray-700">Choose a date range to generate your capital report.</p>
+  const headerStyle = {
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    marginBottom: "1.5rem",
+  };
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                    {["Daily", "Weekly", "Monthly", "Custom"].map((type) => (
-                        <label
-                            key={type}
-                            className={`cursor-pointer border rounded-lg p-4 flex flex-col items-start relative pl-10 ${
-                                reportType === type
-                                    ? "border-[#4b2e17] bg-[#f3dfc3]"
-                                    : "border-[#e0d6c4] bg-[#f9f5f0]"
-                            }`}
-                        >
-                            <input
-                                type="radio"
-                                name="reportType"
-                                value={type}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 opacity-0"
-                                checked={reportType === type}
-                                onChange={() => setReportType(type)}
-                            />
+  const paragraphStyle = {
+    marginBottom: "1rem",
+    color: "#4b5563",
+  };
 
-                            <span
-                                className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full border flex items-center justify-center ${
-                                    reportType === type
-                                        ? "border-[#4b2e17] bg-[#4b2e17]"
-                                        : "border-gray-400 bg-white"
-                                }`}
-                            >
-                                {reportType === type && <span className="w-2 h-2 bg-white rounded-full"></span>}
-                            </span>
+  const radioContainerStyle = (selected) => ({
+    cursor: "pointer",
+    borderRadius: "0.5rem",
+    padding: "1rem",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    position: "relative",
+    paddingLeft: "2.5rem",
+    border: selected ? "2px solid #4b2e17" : "2px solid #e0d6c4",
+    backgroundColor: selected ? "#f3dfc3" : "#f9f5f0",
+    transition: "all 0.3s",
+  });
 
-                            <span className="font-semibold">{type}</span>
-                            <span className="text-gray-500 text-sm">
-                                {type === "Daily" && "Pick a single date"}
-                                {type === "Weekly" && "Choose a week"}
-                                {type === "Monthly" && "Select a Month"}
-                                {type === "Custom" && "Select Start and end dates"}
-                            </span>
-                        </label>
-                    ))}
-                </div>
+  const radioOuterCircleStyle = (selected) => ({
+    position: "absolute",
+    left: "0.75rem",
+    top: "50%",
+    transform: "translateY(-50%)",
+    width: "1.25rem",
+    height: "1.25rem",
+    borderRadius: "50%",
+    border: selected ? "2px solid #4b2e17" : "2px solid gray",
+    backgroundColor: selected ? "#4b2e17" : "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  });
 
-                {reportType === "Custom" && (
-                    <div className="mb-6 grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">From</label>
-                            <input
-                                type="date"
-                                value={fromDate}
-                                onChange={(e) => setFromDate(e.target.value)}
-                                className="w-full border border-gray-300 rounded px-3 py-2"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">To</label>
-                            <input
-                                type="date"
-                                value={toDate}
-                                onChange={(e) => setToDate(e.target.value)}
-                                className="w-full border border-gray-300 rounded px-3 py-2"
-                            />
-                        </div>
-                    </div>
-                )}
+  const radioInnerCircleStyle = {
+    width: "0.5rem",
+    height: "0.5rem",
+    borderRadius: "50%",
+    backgroundColor: "white",
+  };
 
-                <div className="flex justify-end gap-4">
-                    <button
-                        onClick={() => navigate("/sales-report")}
-                        className="px-6 py-2 border border-gray-300 rounded hover:bg-gray-100"
-                    >
-                        Cancel
-                    </button>
+  const labelTextStyle = {
+    fontWeight: "600",
+  };
 
-                    <button
-                        className="px-6 py-2 border border-[#4b2e17] bg-[#f9f5f0] font-bold hover:bg-[#e8d4b8] transition-colors"
-                        disabled={!reportType}
-                        onClick={handleGenerate}
-                    >
-                        Generate Report
-                    </button>
-                </div>
+  const labelSubTextStyle = {
+    fontSize: "0.875rem",
+    color: "#6b7280",
+  };
+
+  const dateInputStyle = {
+    width: "100%",
+    padding: "0.5rem",
+    border: "1px solid #d1d5db",
+    borderRadius: "0.375rem",
+    outline: "none",
+  };
+
+  const buttonStyle = {
+    padding: "0.5rem 1.5rem",
+    borderRadius: "0.375rem",
+    fontWeight: "bold",
+    border: "2px solid #4b2e17",
+    cursor: "pointer",
+    transition: "all 0.3s",
+  };
+
+  const cancelButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "white",
+    color: "#374151",
+    border: "1px solid #d1d5db",
+  };
+
+  const generateButtonStyle = reportType
+    ? {
+        ...buttonStyle,
+        backgroundColor: "#f9f5f0",
+        color: "#000",
+      }
+    : {
+        ...buttonStyle,
+        backgroundColor: "#f9f5f0",
+        color: "#9ca3af",
+        cursor: "not-allowed",
+      };
+
+  return (
+    <AuthenticatedLayout>
+      <div style={containerStyle}>
+        <h1 style={headerStyle}>Select Capital Report Date Range</h1>
+        <p style={paragraphStyle}>Choose a date range to generate your capital report.</p>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
+          {["Daily", "Weekly", "Monthly", "Custom"].map((type) => (
+            <label key={type} style={radioContainerStyle(reportType === type)}>
+              <input
+                type="radio"
+                name="reportType"
+                value={type}
+                checked={reportType === type}
+                onChange={() => setReportType(type)}
+                style={{ display: "none" }}
+              />
+              <span style={radioOuterCircleStyle(reportType === type)}>
+                {reportType === type && <span style={radioInnerCircleStyle}></span>}
+              </span>
+              <span style={labelTextStyle}>{type}</span>
+              <span style={labelSubTextStyle}>
+                {type === "Daily" && "Pick a single date"}
+                {type === "Weekly" && "Choose a week"}
+                {type === "Monthly" && "Select a month"}
+                {type === "Custom" && "Select start and end dates"}
+              </span>
+            </label>
+          ))}
+        </div>
+
+        {reportType === "Custom" && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
+            <div>
+              <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: "500" }}>From</label>
+              <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} style={dateInputStyle} />
             </div>
-        </AuthenticatedLayout>
-    );
+            <div>
+              <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: "500" }}>To</label>
+              <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} style={dateInputStyle} />
+            </div>
+          </div>
+        )}
+
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <button style={cancelButtonStyle} onClick={() => (window.location.href = "/sales-report")}>
+            Cancel
+          </button>
+          <button style={generateButtonStyle} disabled={!reportType} onClick={handleGenerate}>
+            Generate Report
+          </button>
+        </div>
+      </div>
+    </AuthenticatedLayout>
+  );
 }

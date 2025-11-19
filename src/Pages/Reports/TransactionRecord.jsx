@@ -1,57 +1,92 @@
+import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "@/api/axios";
 
-
-export default function TransactionRecord() {
-  const navigate = useNavigate();
-  const [transactions, setTransactions] = useState([]);
+export default function TransactionRecord({ auth }) {
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await axios.get('/api/fetchtransactions');
-        setTransactions(response.data.transactions);
-      } catch (err) {
-        console.error('Failed to fetch transactions:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTransactions();
-  }, []);
+  // Mock transactions for frontend demonstration
+  const transactions = [
+    { id: 1, created_at: "2025-11-19T08:30:00", total_amount: 1500 },
+    { id: 2, created_at: "2025-11-18T14:45:00", total_amount: 2500 },
+    { id: 3, created_at: "2025-11-17T10:15:00", total_amount: 3200 },
+  ];
+
+  const goTo = (url) => {
+    window.location.href = url;
+  };
+
+  // Filter transactions based on search input
+  const filteredTransactions = transactions.filter((t) =>
+    t.id.toString().includes(search)
+  );
 
   return (
-    <AuthenticatedLayout>
-      <div className="p-6">
-  {/* Header with title and back button aligned in one row */}
-  <div
-    className="flex items-center justify-between mb-6"
-    style={{ paddingLeft: "8rem", paddingRight: "8rem", marginTop:"-2rem" }}
-  >
-    <h1 className="text-3xl font-bold text-black">
-      Transaction Records List
-    </h1>
-    <button
-      onClick={() => navigate("/dashboard")}
-      className="bg-[#4b2e17] text-white px-5 py-2 rounded-md text-sm font-semibold hover:bg-[#6b3e1f] transition shadow-md"
-    >
-      ← Back
-    </button>
-  </div>
-
-
-
-        
+    <AuthenticatedLayout user={auth?.user}>
+      <div style={{ padding: "1.5rem" }}>
+        {/* Header */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "1.5rem",
+            paddingLeft: "8rem",
+            paddingRight: "8rem",
+            marginTop: "-2rem",
+          }}
+        >
+          <h1 style={{ fontSize: "1.875rem", fontWeight: "bold", color: "black" }}>
+            Transaction Records List
+          </h1>
+          <button
+            onClick={() => goTo("/dashboard")}
+            style={{
+              backgroundColor: "#4b2e17",
+              color: "white",
+              padding: "0.5rem 1.25rem",
+              borderRadius: "0.375rem",
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              cursor: "pointer",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+              transition: "background-color 0.2s",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#6b3e1f")}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4b2e17")}
+          >
+            ← Back
+          </button>
+        </div>
 
         {/* Search Section */}
-        <div className="border border-black shadow-[5px_5px_0px_gray] bg-white max-w-5xl mx-auto p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mb-4">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-[#4b2e17] mb-1">
+        <div
+          style={{
+            border: "1px solid black",
+            boxShadow: "5px 5px 0 gray",
+            backgroundColor: "white",
+            maxWidth: "80rem",
+            margin: "0 auto",
+            padding: "1.25rem",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+              marginBottom: "1rem",
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "#4b2e17",
+                  marginBottom: "0.25rem",
+                }}
+              >
                 Search for Transaction:
               </label>
               <input
@@ -59,73 +94,105 @@ export default function TransactionRecord() {
                 placeholder="Input Transaction Number"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full border border-gray-400 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-[#c5a888] outline-none"
+                style={{
+                  width: "100%",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.375rem",
+                  padding: "0.5rem 0.75rem",
+                  fontSize: "0.875rem",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
               />
             </div>
 
-            <div className="flex-1 mt-3 sm:mt-0">
-              <label className="block text-sm font-medium text-[#4b2e17] mb-1">
+            <div style={{ flex: 1 }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "#4b2e17",
+                  marginBottom: "0.25rem",
+                }}
+              >
                 Date:
               </label>
               <input
                 type="date"
-                className="w-full border border-gray-400 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-[#c5a888] outline-none"
+                style={{
+                  width: "100%",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.375rem",
+                  padding: "0.5rem 0.75rem",
+                  fontSize: "0.875rem",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
               />
             </div>
           </div>
 
           {/* Transaction Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse">
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-700 px-3 py-2">
+                <tr style={{ backgroundColor: "#f3f3f3" }}>
+                  <th style={{ border: "1px solid #4b4b4b", padding: "0.5rem" }}>
                     Transaction Number
                   </th>
-                  <th className="border border-gray-700 px-3 py-2">
-                    Date and Time
-                  </th>
-                  <th className="border border-gray-700 px-3 py-2">
-                    Total Amount
-                  </th>
-                  <th className="border border-gray-700 px-3 py-2"></th>
+                  <th style={{ border: "1px solid #4b4b4b", padding: "0.5rem" }}>Date and Time</th>
+                  <th style={{ border: "1px solid #4b4b4b", padding: "0.5rem" }}>Total Amount</th>
+                  <th style={{ border: "1px solid #4b4b4b", padding: "0.5rem" }}></th>
                 </tr>
               </thead>
               <tbody>
-                {transactions.length ? (
-                  transactions.map((t, i) => (
+                {filteredTransactions.length > 0 ? (
+                  filteredTransactions.map((t, i) => (
                     <tr
                       key={i}
-                      className={`${
-                        i % 2 === 0 ? "bg-[#fffaf6]" : "bg-[#f6ebdf]"
-                      } hover:bg-[#f9f5f0] transition`}
+                      style={{
+                        backgroundColor: i % 2 === 0 ? "#fffaf6" : "#f6ebdf",
+                        transition: "background-color 0.2s",
+                      }}
+                      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
+                      onMouseOut={(e) =>
+                        (e.currentTarget.style.backgroundColor = i % 2 === 0 ? "#fffaf6" : "#f6ebdf")
+                      }
                     >
-                      <td className="border border-gray-400 px-3 py-2 text-[#2e1a0e]">
+                      <td style={{ border: "1px solid #999", padding: "0.5rem", color: "#2e1a0e" }}>
                         #{t.id.toString().padStart(10, "0")}
                       </td>
-                      <td className="border border-gray-400 px-3 py-2 text-[#2e1a0e]">
+                      <td style={{ border: "1px solid #999", padding: "0.5rem", color: "#2e1a0e" }}>
                         {new Date(t.created_at).toLocaleString()}
                       </td>
-                      <td className="border border-gray-400 px-3 py-2 text-[#2e1a0e]">
-                        ₱ {t.total_amount}
+                      <td style={{ border: "1px solid #999", padding: "0.5rem", color: "#2e1a0e" }}>
+                        ₱ {t.total_amount.toLocaleString()}
                       </td>
-                      <td className="border border-gray-400 px-3 py-2 text-center">
-  <button
-    onClick={() => navigate(`/transactions/${t.id}`)}
-    className="bg-[#4b2e17] text-white px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-[#6b3e1f] transition"
-  >
-    Show More
-  </button>
-</td>
-
+                      <td style={{ border: "1px solid #999", padding: "0.5rem", textAlign: "center" }}>
+                        <button
+                          onClick={() => goTo(`/transactions/${t.id}`)}
+                          style={{
+                            backgroundColor: "#4b2e17",
+                            color: "white",
+                            padding: "0.25rem 0.75rem",
+                            borderRadius: "0.375rem",
+                            fontSize: "0.75rem",
+                            fontWeight: 600,
+                            cursor: "pointer",
+                            transition: "background-color 0.2s",
+                          }}
+                          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#6b3e1f")}
+                          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4b2e17")}
+                        >
+                          Show More
+                        </button>
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="5"
-                      className="text-center py-4 text-[#4b2e17] font-medium"
-                    >
+                    <td colSpan="4" style={{ textAlign: "center", padding: "1rem", color: "#4b2e17", fontWeight: 500 }}>
                       No transaction records found.
                     </td>
                   </tr>

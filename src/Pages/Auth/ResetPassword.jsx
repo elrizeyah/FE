@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
 
 export default function ResetPassword() {
   const [email, setEmail] = useState("");
@@ -18,29 +14,73 @@ export default function ResetPassword() {
     setErrors({});
     setStatus("");
 
-    // Simulate password reset
     setTimeout(() => {
-      if (!email) setErrors({ email: "Email is required" });
-      else if (!password) setErrors({ password: "Password is required" });
-      else if (password !== passwordConfirmation)
-        setErrors({ password_confirmation: "Passwords do not match" });
-      else setStatus("Password successfully reset!");
+      const newErrors = {};
+      if (!email) newErrors.email = "Email is required";
+      if (!password) newErrors.password = "Password is required";
+      if (password !== passwordConfirmation)
+        newErrors.password_confirmation = "Passwords do not match";
 
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        setProcessing(false);
+        return;
+      }
+
+      setStatus("Password successfully reset!");
+      setEmail("");
+      setPassword("");
+      setPasswordConfirmation("");
       setProcessing(false);
     }, 1000);
+  };
+
+  const inputStyle = (field, value) => ({
+    width: "22.5rem",
+    padding: "0.5rem",
+    marginTop: "0.25rem",
+    borderRadius: "6px",
+    border: `1px solid ${errors[field] ? "red" : "#D1D5DB"}`,
+    backgroundColor: errors[field] ? "#ffe5e5" : value ? "#fff4e5ff" : "#ffffff",
+    color: errors[field] ? "red" : "#111827",
+    transition: "all 0.2s",
+  });
+
+  const handleFocus = (e) => {
+    e.target.style.borderColor = "#563d28";
+    e.target.style.backgroundColor = "#fff4e5ff";
+    e.target.placeholder = "";
+  };
+
+  const handleBlur = (e, field, placeholder, value) => {
+    e.target.style.borderColor = errors[field] ? "red" : "#D1D5DB";
+    e.target.style.backgroundColor = errors[field] ? "#ffe5e5" : value ? "#fff4e5ff" : "#ffffff";
+    e.target.style.color = errors[field] ? "red" : "#111827";
+    e.target.placeholder = value ? "" : placeholder;
+  };
+
+  const handleHover = (e) => {
+    e.target.style.borderColor = "#563d28";
+    e.target.style.backgroundColor = "#fff4e5ff";
+  };
+
+  const handleHoverLeave = (e, field, value) => {
+    e.target.style.borderColor = errors[field] ? "red" : "#D1D5DB";
+    e.target.style.backgroundColor = errors[field] ? "#ffe5e5" : value ? "#fff4e5ff" : "#ffffff";
+    e.target.style.color = errors[field] ? "red" : "#111827";
   };
 
   return (
     <div
       style={{
-        minHeight: "100vh",
+        minHeight: "90vh",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         fontFamily: "Poppins, sans-serif",
-        background: "linear-gradient(to bottom, #f6ebda, #8a583a)",
+        background: "linear-gradient(to bottom, #fae7d4ff 65%, #7e6346ff)",
         padding: "2rem",
-        position: "relative",
       }}
     >
       {/* LOGO TOP LEFT */}
@@ -48,7 +88,7 @@ export default function ResetPassword() {
         <img
           src="/images/2.png"
           alt="Logo"
-          style={{ width: "150px", boxShadow: "0 4px 10px rgba(0,0,0,0.2)" }}
+          style={{ width: "170px", marginTop:"-1rem",  marginLeft:"-1rem"}}
         />
       </div>
 
@@ -64,34 +104,15 @@ export default function ResetPassword() {
           textAlign: "center",
         }}
       >
-        <h1
-          style={{
-            fontSize: "1.875rem",
-            fontWeight: "700",
-            marginBottom: "0.25rem",
-          }}
-        >
+        <h1 style={{ fontSize: "1.875rem", fontWeight: "700", marginBottom: "0.25rem" }}>
           Create New Password
         </h1>
-        <p
-          style={{
-            fontSize: "0.875rem",
-            color: "#6b7280",
-            marginBottom: "2rem",
-          }}
-        >
+        <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "2rem" }}>
           Please enter your new password.
         </p>
 
         {status && (
-          <div
-            style={{
-              marginBottom: "0.5rem",
-              fontSize: "0.875rem",
-              fontWeight: "500",
-              color: "green",
-            }}
-          >
+          <div style={{ marginBottom: "0.5rem", fontSize: "0.875rem", fontWeight: "500", color: "green" }}>
             {status}
           </div>
         )}
@@ -99,63 +120,91 @@ export default function ResetPassword() {
         <form onSubmit={handleSubmit}>
           {/* EMAIL */}
           <div style={{ textAlign: "left", marginBottom: "1.25rem" }}>
-            <InputLabel htmlFor="email" value="Email" />
-            <TextInput
+            <label htmlFor="email" style={{ fontWeight: "550", color: "#3b3b3bff" }}>Email</label>
+            <input
               id="email"
               type="email"
               value={email}
-              style={{ marginTop: "0.25rem", width: "100%" }}
+              placeholder="Email"
+              style={inputStyle("email", email)}
               onChange={(e) => setEmail(e.target.value)}
+              onFocus={handleFocus}
+              onBlur={(e) => handleBlur(e, "email", "Email", email)}
+              onMouseEnter={handleHover}
+              onMouseLeave={(e) => handleHoverLeave(e, "email", email)}
             />
-            <InputError message={errors.email} />
+            {errors.email && <span style={{ color: "red", fontSize: "0.75rem", marginLeft: '.6rem' }}>{errors.email}</span>}
           </div>
 
           {/* PASSWORD */}
           <div style={{ textAlign: "left", marginBottom: "1.25rem" }}>
-            <InputLabel htmlFor="password" value="Password" />
-            <TextInput
+            <label htmlFor="password" style={{ fontWeight: "550", color: "#3b3b3bff" }}>Password</label>
+            <input
               id="password"
               type="password"
               value={password}
-              style={{ marginTop: "0.25rem", width: "100%" }}
+              placeholder="Password"
+              style={inputStyle("password", password)}
               onChange={(e) => setPassword(e.target.value)}
+              onFocus={handleFocus}
+              onBlur={(e) => handleBlur(e, "password", "Password", password)}
+              onMouseEnter={handleHover}
+              onMouseLeave={(e) => handleHoverLeave(e, "password", password)}
             />
-            <InputError message={errors.password} />
+            {errors.password && <span style={{ color: "red", fontSize: "0.75rem" }}>{errors.password}</span>}
           </div>
 
           {/* CONFIRM PASSWORD */}
           <div style={{ textAlign: "left", marginBottom: "1.25rem" }}>
-            <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-            <TextInput
+            <label htmlFor="password_confirmation" style={{ fontWeight: "550", color: "#3b3b3bff" }}>Confirm Password</label>
+            <input
               id="password_confirmation"
               type="password"
               value={passwordConfirmation}
-              style={{ marginTop: "0.25rem", width: "100%" }}
+              placeholder="Confirm Password"
+              style={inputStyle("password_confirmation", passwordConfirmation)}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
+              onFocus={handleFocus}
+              onBlur={(e) => handleBlur(e, "password_confirmation", "Confirm Password", passwordConfirmation)}
+              onMouseEnter={handleHover}
+              onMouseLeave={(e) => handleHoverLeave(e, "password_confirmation", passwordConfirmation)}
             />
-            <InputError message={errors.password_confirmation} />
+            {errors.password_confirmation && (
+              <span style={{ color: "red", fontSize: "0.75rem" }}>{errors.password_confirmation}</span>
+            )}
           </div>
 
           {/* BUTTON */}
-          <PrimaryButton
-            disabled={processing}
-            style={{
-              width: "100%",
-              padding: "0.5rem 0",
-              backgroundColor: "#422912ff",
-              fontSize: "15px",
-              transition: "0.3s",
-              cursor: processing ? "not-allowed" : "pointer",
-            }}
-            onMouseEnter={(e) => {
-              if (!processing) e.currentTarget.style.backgroundColor = "#2e1e0fff";
-            }}
-            onMouseLeave={(e) => {
-              if (!processing) e.currentTarget.style.backgroundColor = "#422912ff";
-            }}
-          >
-            Change Password
-          </PrimaryButton>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "1.5rem" }}>
+            <button
+              type="submit"
+              disabled={processing}
+              style={{
+                width: "150px",
+                padding: "0.6rem",
+                fontSize: "1rem",
+                color: "#fff",
+                background: "linear-gradient(to bottom, #4a2f26, #2f1c14)",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                textAlign: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "background 0.3s",
+                boxShadow: "0 4px 6px rgba(0,0,0,0.2)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "linear-gradient(to bottom, #3e2b1c, #2e1c0f)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "linear-gradient(to bottom, #4a2f26, #2f1c14)";
+              }}
+            >
+              Change Password
+            </button>
+          </div>
 
           <a
             href="/login"

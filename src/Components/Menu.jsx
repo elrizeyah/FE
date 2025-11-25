@@ -3,24 +3,19 @@ import React from "react";
 export default function Menu({ toggleMenu }) {
   const buttonStyle = {
     cursor: "pointer",
-    padding: "12px",
-    borderRadius: "0.5rem",
-    backgroundColor: "transparent",
+    padding: "8px", // smaller button
+    borderRadius: "0.25rem",
+    backgroundColor: "transparent", // no hover change
     border: "none",
     position: "relative",
     zIndex: 50,
-    transition: "background-color 0.2s",
-  };
-
-  const buttonHoverStyle = {
-    backgroundColor: "#e5e7eb", // light gray on hover
   };
 
   const lineStyle = {
     display: "block",
-    width: "24px",
+    width: "20px",
     height: "2px",
-    backgroundColor: "#374151", // gray-700
+    backgroundColor: "#374151",
     borderRadius: "1px",
   };
 
@@ -29,19 +24,15 @@ export default function Menu({ toggleMenu }) {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    gap: "6px",
+    gap: "4px",
   };
-
-  const [hover, setHover] = React.useState(false);
 
   return (
     <button
       onClick={toggleMenu}
       title="Menu"
       aria-label="Toggle menu"
-      style={{ ...buttonStyle, ...(hover ? buttonHoverStyle : {}) }}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      style={buttonStyle}
     >
       <div style={containerStyle}>
         <span style={lineStyle}></span>

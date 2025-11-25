@@ -14,9 +14,9 @@ export default function Dashboard({ user }) {
         header={
           <h1
             style={{
-              marginLeft: "7rem",
-              marginTop: "-1.6rem",
-              marginBottom: "-1.6rem",
+              marginLeft: "10.5rem",
+              marginTop: "1rem",
+              marginBottom: "1rem",
               fontSize: "2.25rem",
               fontWeight: "bold",
               color: "#111827",
@@ -27,7 +27,7 @@ export default function Dashboard({ user }) {
         }
       >
         <div style={{ paddingTop: "0.25rem" }}>
-  <div style={{ maxWidth: "96rem", margin: "0 auto", padding: "0 3rem" }}>
+  <div style={{ maxWidth: "96rem", margin: "0 auto", padding: "0 9rem", weight:"10rem"}}>
     {/* Dashboard Cards */}
     <div
       style={{
@@ -67,122 +67,138 @@ export default function Dashboard({ user }) {
 
 
             {/* Import Excel Section */}
-            <div style={{ marginTop: "2.5rem" }}>
-              <h2
-                style={{
-                  fontSize: "1.25rem",
-                  fontWeight: 600,
-                  color: "#4b2e17",
-                  marginBottom: "0.25rem",
-                }}
-              >
-                Import Excel
-              </h2>
-              <p style={{ color: "#374151", fontSize: "0.875rem", marginBottom: "1rem" }}>
-                Upload your Excel file to update products and transactions.
-              </p>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr",
-                  gap: "1.5rem",
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: "1rem",
-                    border: "1px solid black",
-                    padding: "1.5rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    transition: "box-shadow 0.3s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "10px 10px 15px rgba(0,0,0,0.3)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-                >
-                  <Import />
-                </div>
-              </div>
-            </div>
+<div style={{ marginTop: "2.5rem" }}>
+<h2
+style={{
+fontSize: "1.25rem",
+fontWeight: 600,
+color: "#4b2e17",
+marginBottom: "0.25rem",
+}}
+>
+Import Excel
+</h2>
+<p style={{ color: "#374151", fontSize: "0.875rem", marginBottom: "1rem" }}>
+Upload your Excel file to update products and transactions.
+</p>
+
+
+<div
+style={{
+display: "grid",
+gridTemplateColumns: "1fr",
+gap: "1.5rem",
+}}
+>
+<div
+style={{
+background: "linear-gradient(to bottom, #f9e7d0, #e8d4b8)",
+borderRadius: "1rem",
+border: "1px solid black",
+padding: "2rem",
+display: "flex",
+flexDirection: "column",
+alignItems: "center",
+transition: "box-shadow 0.3s",
+boxShadow: "none",
+}}
+onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "8px 8px 18px rgba(0,0,0,0.35)")}
+onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
+>
+<Import />
+</div>
+</div>
+</div>
 
             {/* Quick Access Section */}
-            <div id="quick-access" style={{ marginTop: "2.5rem" }}>
-              <h2
-                style={{
-                  fontSize: "1.25rem",
-                  fontWeight: 600,
-                  color: "#4b2e17",
-                  marginBottom: "1rem",
-                }}
-              >
-                Quick Access
-              </h2>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                  gap: "3rem",
-                  textAlign: "center",
-                }}
-              >
-                {[
-                  { img: "/images/6.png", label: "Make\nTransaction", href: "/make-transaction" },
-                  { img: "/images/7.png", label: "Transaction\nHistory", href: "/transaction-rec-section" },
-                  { img: "/images/8.png", label: "Add Product", href: "/add-product" },
-                  { img: "/images/9.png", label: "Generate\nReport", href: "/generate-report" },
-                ].map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      cursor: "pointer",
-                      transition: "transform 0.3s",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "5rem",
-                        height: "5rem",
-                        borderRadius: "9999px",
-                        background: "linear-gradient(to bottom, #f3dfc3, #d7bfa0)",
-                        border: "1px solid #4b2e17",
-                        transition: "box-shadow 0.3s",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "5px 5px 15px rgba(75,46,23,0.6)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-                    >
-                      <img src={item.img} alt="icon" style={{ width: "2.5rem", height: "2.5rem", objectFit: "contain" }} />
-                    </div>
-                    <span
-                      style={{
-                        marginTop: "0.5rem",
-                        fontSize: "0.875rem",
-                        color: "#000",
-                        fontWeight: 300,
-                        textAlign: "center",
-                        whiteSpace: "pre-line",
-                        transition: "font-weight 0.1s",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.fontWeight = 500)}
-                      onMouseLeave={(e) => (e.currentTarget.style.fontWeight = 300)}
-                    >
-                      {item.label}
-                    </span>
-                  </a>
-                ))}
-              </div>
-            </div>
+<div id="quick-access" style={{ marginTop: "2.5rem" }}>
+  <h2
+    style={{
+      fontSize: "1.25rem",
+      fontWeight: 600,
+      color: "#4b2e17",
+      marginBottom: "1rem",
+    }}
+  >
+    Quick Access
+  </h2>
+  <div
+    style={{
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "left",
+      gap: "3rem",
+      textAlign: "center",
+    }}
+  >
+    {[
+   
+  { img: "/images/6.png", label: "Make\nTransaction", href: "/make-transaction" },
+  { img: "/images/7.png", label: "Transaction\nHistory", href: "/transaction-rec-section" },
+  { img: "/images/8.png", label: "Add Product", href: "/add-product" },
+  { img: "/images/9.png", label: "Generate\nReport", href: "/generate-report" },
+].map((item) => (
+  <a
+    key={item.href}
+    href={item.href}
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      cursor: "pointer",
+      transition: "transform 0.3s",
+      textDecoration: "none",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = "scale(1.05)";
+      e.currentTarget.querySelector("span").style.fontWeight = "600"; // BOLD TEXT
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = "scale(1)";
+      e.currentTarget.querySelector("span").style.fontWeight = "300"; // RETURN TO NORMAL
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "5rem",
+        height: "5rem",
+        borderRadius: "9999px",
+        background: "linear-gradient(to bottom, #f3dfc3, #d7bfa0)",
+        border: "1px solid #4b2e17",
+        transition: "box-shadow 0.3s",
+      }}
+      onMouseEnter={(e) =>
+        (e.currentTarget.style.boxShadow = "5px 5px 15px rgba(75,46,23,0.6)")
+      }
+      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
+    >
+      <img
+        src={item.img}
+        alt="icon"
+        style={{ width: "2.5rem", height: "2.5rem", objectFit: "contain" }}
+      />
+    </div>
+
+    <span
+      style={{
+        marginTop: "0.5rem",
+        fontSize: "0.875rem",
+        color: "#000",
+        fontWeight: 300,
+        textAlign: "center",
+        whiteSpace: "pre-line",
+        transition: "font-weight 0.2s",
+      }}
+    >
+      {item.label}
+    </span>
+  </a>
+))}</div>
+</div>
+
 
             {/* Recent Activity */}
             <div style={{ marginTop: "3rem" }}>
@@ -196,6 +212,7 @@ export default function Dashboard({ user }) {
               >
                 Recent Activity
               </h2>
+
               <div
                 style={{
                   display: "grid",
@@ -213,7 +230,7 @@ export default function Dashboard({ user }) {
                     style={{
                       background: "linear-gradient(to bottom, #f9e7d0, #e8d4b8)",
                       textAlign: "center",
-                      height: "14rem",
+                      height: "10rem",
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "center",

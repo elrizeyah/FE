@@ -1,4 +1,4 @@
-export default function VerifyEmailCard() {
+export default function PasswordResetCard() {
   return (
     <div
       style={{
@@ -12,21 +12,17 @@ export default function VerifyEmailCard() {
       }}
     >
       <div
-  style={{
-    background: "#ffffff",
-    width: "100%",         // let it shrink up to maxWidth
-    maxWidth: "450px",     // max width applied
-    padding: "20px",
-    textAlign: "center",
-    boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    boxSizing: "border-box", // ensures padding doesn’t exceed maxWidth
-    margin: "0 auto",         // centers horizontally
-  }}
->
-
+        style={{
+          background: "#ffffff",
+          maxWidth: 400,
+          padding: "20px",
+          textAlign: "center",
+          boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center", // Ensures children are centered horizontally
+        }}
+      >
         <h1
           style={{
             fontSize: "28px",
@@ -35,8 +31,7 @@ export default function VerifyEmailCard() {
             letterSpacing: "1px",
           }}
         >
-                    Email Verification
-
+          Password Reset Request
         </h1>
 
         <p
@@ -47,7 +42,8 @@ export default function VerifyEmailCard() {
             marginBottom: "30px",
           }}
         >
-          Please click the button below to verify your <br />email address.
+          If you’ve lost your password or wish to reset it, <br />
+          use the link below to get started.
         </p>
 
         <button
@@ -77,7 +73,7 @@ export default function VerifyEmailCard() {
               "linear-gradient(to bottom, #4a2f26, #2f1c14)";
           }}
         >
-          Verify Email
+          Reset Password
         </button>
 
         <p
@@ -88,7 +84,9 @@ export default function VerifyEmailCard() {
             lineHeight: "1.5",
           }}
         >
-          If you did not make this request, please ignore this message.
+          If you did not request a password reset, you can ignore this email.
+          <br /> Only a person with access to your email can reset your account
+          password.
         </p>
       </div>
     </div>

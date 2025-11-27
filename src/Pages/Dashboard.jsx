@@ -134,9 +134,9 @@ onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
     {[
    
   { img: "/images/6.png", label: "Make\nTransaction", href: "/make-transaction" },
-  { img: "/images/7.png", label: "Transaction\nHistory", href: "/transaction-rec-section" },
+  { img: "/images/7.png", label: "Transaction\nHistory", href: "/transaction-history" },
   { img: "/images/8.png", label: "Add Product", href: "/add-product" },
-  { img: "/images/9.png", label: "Generate\nReport", href: "/generate-report" },
+  { img: "/images/9.png", label: "Generate\nReport", href: "/generate-sales-report" },
 ].map((item) => (
   <a
     key={item.href}

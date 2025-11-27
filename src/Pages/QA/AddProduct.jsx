@@ -1,8 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
-export default function AddProduct() {
-  const [productData, setProduct] = useState({
+export default function EditProduct() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  // Sample products (mock data)
+  const sampleProducts = [
+    { id: "1", name: "Chocolate Bar", quantity: 10, price: 50, category: "chocolate", is_archived: false },
+    { id: "2", name: "Orange Juice", quantity: 20, price: 80, category: "drinks", is_archived: false },
+    { id: "3", name: "Chips", quantity: 15, price: 30, category: "snacks", is_archived: false },
+  ];
+
+  const [loading, setLoading] = useState(true);
+  const [product, setProduct] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const [formData, setFormData] = useState({
     name: "",
     quantity: 0,
     price: 0,
@@ -11,38 +26,50 @@ export default function AddProduct() {
     file: null,
   });
 
-  const resetForm = () => {
-    setProduct({
-      name: "",
-      quantity: 0,
-      price: 0,
-      category: "",
-      is_archived: false,
-      file: null,
-    });
+  // Fetch product on mount (mock)
+  useEffect(() => {
+    const found = sampleProducts.find((p) => String(p.id) === String(id));
+    if (found) {
+      setProduct(found);
+      setFormData({
+        name: found.name,
+        quantity: found.quantity,
+        price: found.price,
+        category: found.category,
+        is_archived: found.is_archived,
+        file: null,
+      });
+    }
+    setLoading(false);
+  }, [id]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+    // Show success modal instead of alert
+    setShowSuccessModal(true);
   };
 
-  const submitProducts = (e) => {
-    e.preventDefault();
-    console.log("Submitting product:", productData);
-    alert("Product added successfully!");
-    resetForm();
-  };
+  if (loading)
+    return (
+      <AuthenticatedLayout>
+        <div>Loading...</div>
+      </AuthenticatedLayout>
+    );
 
   return (
     <AuthenticatedLayout>
       <div style={{ display: "flex", justifyContent: "center", padding: "3rem 1rem" }}>
         <form
-          onSubmit={submitProducts}
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
           style={{
             backgroundColor: "#fefaf7",
-            border: "1px solid #d1d5db",
+            border: "1px solid gray",
             borderRadius: "1rem",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
             width: "100%",
-            maxWidth: "40rem",
-            display: "flex",
-            flexDirection: "column",
+            maxWidth: "600px",
           }}
         >
           {/* Header */}
@@ -50,56 +77,46 @@ export default function AddProduct() {
             style={{
               backgroundColor: "#f8ecdf",
               padding: "1rem 1.5rem",
-              borderBottom: "1px solid #d1d5db",
+              borderBottom: "1px solid gray",
               borderTopLeftRadius: "1rem",
               borderTopRightRadius: "1rem",
             }}
           >
-            <h1 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#000" }}>
-              Add Product
-            </h1>
+            <h1 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#000" }}>Add Product</h1>
           </div>
 
           {/* Form Fields */}
           <div style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-            {/* Product Name + Image */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#1f2937" }}>
-                Add Product Name
-              </label>
+            {/* Name + Image */}
+            <div>
+              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#333" }}>Add Product Name</label>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.25rem" }}>
                 <input
                   type="text"
-                  value={productData.name}
-                  onChange={(e) => setProduct({ ...productData, name: e.target.value })}
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   style={{
                     flex: 1,
-                    padding: "0.5rem",
-                    border: "1px solid #9ca3af",
+                    border: "1px solid gray",
                     borderRadius: "0.25rem",
+                    padding: "0.5rem",
                     fontSize: "0.875rem",
                   }}
                 />
                 <label
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.25rem",
                     fontSize: "0.875rem",
-                    backgroundColor: "#e5e7eb",
+                    backgroundColor: "#e2e2e2",
                     padding: "0.5rem 0.75rem",
-                    border: "1px solid #9ca3af",
+                    border: "1px solid gray",
                     borderRadius: "0.25rem",
                     cursor: "pointer",
-                    transition: "background-color 0.2s",
                   }}
-                  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#d1d5db")}
-                  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#e5e7eb")}
                 >
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setProduct({ ...productData, file: e.target.files[0] })}
+                    onChange={(e) => setFormData({ ...formData, file: e.target.files[0] })}
                     style={{ display: "none" }}
                   />
                   📷 Change Image
@@ -108,16 +125,17 @@ export default function AddProduct() {
             </div>
 
             {/* Category */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#1f2937" }}>Add Category</label>
+            <div>
+              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#333" }}>Add Category</label>
               <select
-                value={productData.category}
-                onChange={(e) => setProduct({ ...productData, category: e.target.value })}
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 style={{
                   marginTop: "0.25rem",
-                  padding: "0.5rem",
-                  border: "1px solid #9ca3af",
+                  width: "100%",
+                  border: "1px solid gray",
                   borderRadius: "0.25rem",
+                  padding: "0.5rem",
                   fontSize: "0.875rem",
                 }}
               >
@@ -129,32 +147,32 @@ export default function AddProduct() {
             </div>
 
             {/* Quantity */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#1f2937" }}>Indicate Quantity Available</label>
+            <div>
+              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#333" }}>Indicate Quantity Available</label>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.25rem" }}>
                 <button
                   type="button"
-                  onClick={() => setProduct({ ...productData, quantity: Math.max(0, productData.quantity - 1) })}
-                  style={{ padding: "0.25rem 0.5rem", border: "1px solid #9ca3af", borderRadius: "0.25rem", cursor: "pointer" }}
+                  onClick={() => setFormData({ ...formData, quantity: Math.max(0, formData.quantity - 1) })}
+                  style={{ border: "1px solid gray", padding: "0.25rem 0.5rem", borderRadius: "0.25rem", cursor: "pointer" }}
                 >
                   -
                 </button>
                 <input
                   type="number"
-                  value={productData.quantity}
-                  onChange={(e) => setProduct({ ...productData, quantity: Number(e.target.value) })}
+                  value={formData.quantity}
+                  onChange={(e) => setFormData({ ...formData, quantity: Number(e.target.value) })}
                   style={{
                     flex: 1,
-                    padding: "0.5rem",
-                    border: "1px solid #9ca3af",
+                    border: "1px solid gray",
                     borderRadius: "0.25rem",
+                    padding: "0.5rem",
                     fontSize: "0.875rem",
                   }}
                 />
                 <button
                   type="button"
-                  onClick={() => setProduct({ ...productData, quantity: productData.quantity + 1 })}
-                  style={{ padding: "0.25rem 0.5rem", border: "1px solid #9ca3af", borderRadius: "0.25rem", cursor: "pointer" }}
+                  onClick={() => setFormData({ ...formData, quantity: formData.quantity + 1 })}
+                  style={{ border: "1px solid gray", padding: "0.25rem 0.5rem", borderRadius: "0.25rem", cursor: "pointer" }}
                 >
                   +
                 </button>
@@ -162,18 +180,19 @@ export default function AddProduct() {
             </div>
 
             {/* Price */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#1f2937" }}>Indicate Price</label>
+            <div>
+              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#333" }}>Indicate Price</label>
               <input
                 type="number"
-                placeholder="₱ 00.00"
-                value={productData.price}
-                onChange={(e) => setProduct({ ...productData, price: Number(e.target.value) })}
+                value={formData.price === 0 ? "" : formData.price}
+                placeholder="0"
+                onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
                 style={{
                   marginTop: "0.25rem",
-                  padding: "0.5rem",
-                  border: "1px solid #9ca3af",
+                  width: "33.3rem",
+                  border: "1px solid gray",
                   borderRadius: "0.25rem",
+                  padding: "0.5rem",
                   fontSize: "0.875rem",
                 }}
               />
@@ -188,21 +207,13 @@ export default function AddProduct() {
               alignItems: "center",
               gap: "1rem",
               padding: "1rem 1.5rem",
-              borderTop: "1px solid #d1d5db",
+              borderTop: "1px solid gray",
             }}
           >
             <button
               type="button"
-              onClick={resetForm}
-              style={{
-                fontSize: "0.875rem",
-                fontWeight: "600",
-                color: "#000",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                textDecoration: "underline",
-              }}
+              onClick={() => navigate("/inventory1")}
+              style={{ fontSize: "0.875rem", fontWeight: "600", color: "#000", cursor: "pointer", background: "none", border: "none", textDecoration: "underline" }}
             >
               Cancel
             </button>
@@ -211,21 +222,73 @@ export default function AddProduct() {
               style={{
                 backgroundColor: "#4b2e17",
                 color: "#fff",
-                padding: "0.5rem 1rem",
+                padding: "0.5rem 1.25rem",
                 borderRadius: "0.25rem",
                 fontWeight: "600",
+                fontSize: "0.875rem",
                 cursor: "pointer",
-                border: "none",
-                transition: "background-color 0.2s",
               }}
-              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#3a2211")}
-              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4b2e17")}
             >
               Add Product
             </button>
           </div>
         </form>
       </div>
+
+      {/* SUCCESS MODAL */}
+      {showSuccessModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              width: "18rem",
+              backgroundColor: "#fff",
+              padding: "2rem",
+              textAlign: "center",
+              borderRadius: "0.5rem",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+            }}
+          >
+            <h1 style={{ fontSize: "1.5rem", fontWeight: "bold", marginTop: "-1rem" }}>
+              Product Added!
+            </h1>
+
+            <p style={{ marginTop: "2rem", color: "#555", fontSize: "15px" }}>
+              Your product has been successfully added.
+            </p>
+
+            <button
+              onClick={() => {
+                setShowSuccessModal(false);
+                navigate("/inventory1");
+              }}
+              style={{
+                marginTop: "1.5rem",
+                width: "8rem",
+                padding: "0.5rem",
+                backgroundColor: "#ccc",
+                borderRadius: "0.3rem",
+                cursor: "pointer",
+                fontWeight: "600",
+              }}
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      )}
     </AuthenticatedLayout>
   );
 }

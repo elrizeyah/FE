@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 export default function Import() {
   const [data, setData] = useState({ excel_file: null });
@@ -9,23 +9,30 @@ export default function Import() {
   const fileInputRef = useRef(null);
 
   // Handle file selection
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     setData({ excel_file: file });
     setLocalError("");
 
     if (file) {
       const reader = new FileReader();
-      reader.onload = (evt) => {
-        const bstr = evt.target.result;
-        const wb = XLSX.read(bstr, { type: "binary" });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const jsonData = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      reader.onload = async (evt) => {
+        const arrayBuffer = evt.target.result;
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(arrayBuffer);
+
+        const worksheet = workbook.worksheets[0];
+        const jsonData = [];
+
+        worksheet.eachRow((row) => {
+          // row.values[0] is empty, so we slice from index 1
+          jsonData.push(row.values.slice(1));
+        });
+
         setExcelData(jsonData);
         setShowData(false);
       };
-      reader.readAsBinaryString(file);
+      reader.readAsArrayBuffer(file); // ExcelJS requires ArrayBuffer
     } else {
       setExcelData([]);
     }
@@ -163,33 +170,33 @@ export default function Import() {
       )}
 
       {showData && excelData.length > 0 && (
-  <div
-    style={{
-      marginTop: "2rem", // increased from 1rem
-      overflow: "auto",
-      border: "1px solid #ccc",
-      padding: "1rem",
-      borderRadius: "0.5rem",
-      maxHeight: "400px",
-    }}
-  >
-    <table className="table-auto border-collapse border border-gray-300 w-full">
-      <tbody>
-        {excelData.map((row, i) => (
-          <tr key={i}>
-            {row.map((cell, j) => (
-              <td
-                key={j}
-                className="border px-3 py-1 text-sm text-gray-700"
-              >
-                {cell}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+        <div
+          style={{
+            marginTop: "2rem",
+            overflow: "auto",
+            border: "1px solid #ccc",
+            padding: "1rem",
+            borderRadius: "0.5rem",
+            maxHeight: "400px",
+          }}
+        >
+          <table className="table-auto border-collapse border border-gray-300 w-full">
+            <tbody>
+              {excelData.map((row, i) => (
+                <tr key={i}>
+                  {row.map((cell, j) => (
+                    <td
+                      key={j}
+                      className="border px-3 py-1 text-sm text-gray-700"
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

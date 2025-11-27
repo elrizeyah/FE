@@ -1,5 +1,6 @@
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Link } from "react-router-dom";
 
 export default function TransactionRecSection({ auth, onNavigate }) {
   // onNavigate is a function to handle navigation between pages
@@ -56,51 +57,53 @@ export default function TransactionRecSection({ auth, onNavigate }) {
 
       {/* Buttons */}
       <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "48px" }}>
-        <button
-          onClick={() => onNavigate("/make-transaction")}
-          style={{
-            display: "block",
-            textAlign: "left",
-            border: "2px solid #4b2e17",
-            color: "#000000",
-            fontWeight: "bold",
-            padding: "12px 32px",
-            backgroundColor: "#f9f5f0",
-            width: "100%",
-            maxWidth: "1088px", // lg:w-[68rem]
-            margin: "0 auto",
-            fontSize: "24px",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
-        >
-          Make a Transaction Record Form
-        </button>
+        <Link
+  to="/make-transaction"
+  style={{
+    display: "block",
+    textAlign: "left",
+    border: "1px solid #5c5c5cff",
+    color: "#000000",
+    fontWeight: "bold",
+    padding: "12px 32px",
+    backgroundColor: "#f9f5f0",
+    width: "100%",
+    maxWidth: "1020px",
+    margin: "0 auto",
+    fontSize: "24px",
+    cursor: "pointer",
+    textDecoration: "none",
+    transition: "background-color 0.2s",
+  }}
+  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
+  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
+>
+  Make a Transaction Record Form
+</Link>
 
-        <button
-          onClick={() => onNavigate("/transaction-record")}
-          style={{
-            display: "block",
-            textAlign: "left",
-            border: "2px solid #4b2e17",
-            color: "#000000",
-            fontWeight: "bold",
-            padding: "12px 32px",
-            backgroundColor: "#f9f5f0",
-            width: "100%",
-            maxWidth: "1088px", // lg:w-[68rem]
-            margin: "0 auto",
-            fontSize: "24px",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
-        >
-          Transaction Records List
-        </button>
+        <Link
+  to="/transaction-history"
+  style={{
+    display: "block",
+    textAlign: "left",
+    border: "1px solid #5c5c5cff",
+    color: "#000000",
+    fontWeight: "bold",
+    padding: "12px 32px",
+    backgroundColor: "#f9f5f0",
+    width: "100%",
+    maxWidth: "1020px",
+    margin: "0 auto",
+    fontSize: "24px",
+    cursor: "pointer",
+    textDecoration: "none",
+    transition: "background-color 0.2s",
+  }}
+  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
+  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
+>
+  Transaction Records List
+</Link>
       </div>
     </AuthenticatedLayout>
   );

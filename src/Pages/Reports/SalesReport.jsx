@@ -58,72 +58,79 @@ export default function CreateReport() {
           </h1>
 
           <Link
-  to="/dashboard"
-  style={{
-    backgroundColor: "#6b3e1f",
-    color: "white",
-    padding: "0.6rem 1.3rem",
-    borderRadius: "0.375rem",
-    fontSize: "1rem",
-    cursor: "pointer",
-    border: "none",
-    transition: "0.3s",
-    marginTop: "1rem",
-    display: "inline-block",
-    textDecoration: "none",
-    textAlign: "center"
-  }}
-  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4b2e17")}
-  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#6b3e1f")}
->
-  ← Back
-</Link>
+                    to="/generate-sales-report"
+                    style={{
+                      backgroundColor: "#6b3e1f",
+                      color: "white",
+                      padding: "0.5rem 1.5em",
+                      backgroundColor: "#4b2e17",
+                      borderRadius: "0.375rem",
+                      fontSize: "1rem",
+                      cursor: "pointer",
+                      border: "none",
+                      marginTop: "1rem",
+                      display: "inline-block",
+                      textDecoration: "none",
+                      textAlign: "center",
+                      color: "#fff",
+                      fontWeight: "bold",
+                      transition: "all 0.2s"
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#2c1b0eff")}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#4b2e17")}
+                  >
+                    ← Back
+                  </Link>
 
         </div>
 
         {/* BUTTONS */}
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <button
-            style={{
-              textAlign: "left",
-              border: "2px solid #4b2e17",
-              backgroundColor: "#f9f5f0",
-              color: "#000",
-              fontWeight: 700,
-              fontSize: "1.5rem",
-              padding: "0.75rem 2rem",
-              cursor: "pointer",
-              width: "67rem",
-              margin: "0 auto",
-              transition: "0.3s",
-            }}
-            onClick={() => goTo("/generate-sales-report")}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
-          >
-            Generate Sales Report
-          </button>
+          <Link to="/generate-sales-report" style={{ textDecoration: "none", width: "100%" }}>
+        <button
+          style={{
+            textAlign: "left",
+            border: "2px solid #4b2e17",
+            backgroundColor: "#f9f5f0",
+            color: "#000",
+            fontWeight: 700,
+            fontSize: "1.5rem",
+            padding: "0.75rem 2rem",
+            cursor: "pointer",
+            width: "67rem",
+            margin: "0 auto",
+            transition: "0.3s",
+            marginLeft:"7rem"
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
+        >
+          Generate Sales Report
+        </button>
+      </Link>
 
-          <button
-            style={{
-              textAlign: "left",
-              border: "2px solid #4b2e17",
-              backgroundColor: "#fdf6ee",
-              color: "#000",
-              fontWeight: 700,
-              fontSize: "1.5rem",
-              padding: "0.75rem 2rem",
-              cursor: "pointer",
-              width: "67rem",
-              margin: "0 auto",
-              transition: "0.3s",
-            }}
-            onClick={() => goTo("/generate-capital-report")}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fdf6ee")}
-          >
-            Generate Capital Report
-          </button>
+          <Link to="/generate-capital-report" style={{ textDecoration: "none", width: "100%" }}>
+        <button
+          style={{
+            textAlign: "left",
+            border: "2px solid #4b2e17",
+            backgroundColor: "#f9f5f0",
+            color: "#000",
+            fontWeight: 700,
+            fontSize: "1.5rem",
+            padding: "0.75rem 2rem",
+            cursor: "pointer",
+            width: "67rem",
+            margin: "0 auto",
+            transition: "0.3s",
+            marginLeft:"7rem"
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#e8d4b8")}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
+        >
+          Generate Capital Report
+        </button>
+      </Link>
         </div>
 
         {/* TABLES CONTAINER */}

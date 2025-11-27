@@ -15,6 +15,7 @@ export default function EditProduct() {
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -45,8 +46,8 @@ export default function EditProduct() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    alert("Product updated successfully!");
-    navigate("/inventory1");
+    // Show success modal instead of alert
+    setShowSuccessModal(true);
   };
 
   if (loading)
@@ -180,14 +181,19 @@ export default function EditProduct() {
 
             {/* Price */}
             <div>
-              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#333" }}>Indicate Price</label>
+              <label style={{ fontWeight: "600", fontSize: "0.875rem", color: "#333" }}>
+                Indicate Price
+              </label>
               <input
                 type="number"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+                value={formData.price === 0 ? "" : formData.price}
+                placeholder="0"
+                onChange={(e) =>
+                  setFormData({ ...formData, price: Number(e.target.value) })
+                }
                 style={{
                   marginTop: "0.25rem",
-                  width: "100%",
+                  width: "33.3rem",
                   border: "1px solid gray",
                   borderRadius: "0.25rem",
                   padding: "0.5rem",
@@ -227,11 +233,66 @@ export default function EditProduct() {
                 cursor: "pointer",
               }}
             >
-              Edit Product
+              Save Changes
             </button>
           </div>
         </form>
       </div>
+
+      {/* SUCCESS MODAL */}
+      {showSuccessModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              width: "18rem",
+              backgroundColor: "#fff",
+              padding: "2rem",
+              textAlign: "center",
+              borderRadius: "0.5rem",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+            }}
+          >
+            <h1 style={{ fontSize: "1.5rem", fontWeight: "bold", marginTop: "-1rem" }}>
+              Notice
+            </h1>
+
+            <p style={{ marginTop: "2rem", color: "#555", fontSize: "15px" }}>
+              Your product has been successfully updated.
+            </p>
+
+            <button
+              onClick={() => {
+                setShowSuccessModal(false);
+                navigate("/inventory1");
+              }}
+              style={{
+                marginTop: "1.5rem",
+                width: "8rem",
+                padding: "0.5rem",
+                backgroundColor: "#ccc",
+                borderRadius: "0.3rem",
+                cursor: "pointer",
+                fontWeight: "600",
+              }}
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      )}
     </AuthenticatedLayout>
   );
 }

@@ -30,7 +30,9 @@ export default function TransactionHistory({ transactions = [], user }) {
             fontWeight: "bold",
             textAlign: "center",
             color: "#000",
-            marginBottom: "1.5rem",
+            marginBottom: ".5rem",
+            marginTop: "-3rem",
+            letterSpacing: "1px",
           }}
         >
           Transaction Records List
@@ -47,10 +49,11 @@ export default function TransactionHistory({ transactions = [], user }) {
             padding: "1.25rem",
           }}
         >
+          {/* 👉 SEARCH + DATE aligned horizontally now */}
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "row",
               gap: "1rem",
               marginBottom: "1rem",
             }}
@@ -61,7 +64,7 @@ export default function TransactionHistory({ transactions = [], user }) {
                   display: "block",
                   fontSize: "0.875rem",
                   fontWeight: "600",
-                  color: "#4b2e17",
+                  color: "#000",
                   marginBottom: "0.25rem",
                 }}
               >
@@ -73,7 +76,7 @@ export default function TransactionHistory({ transactions = [], user }) {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 style={{
-                  width: "100%",
+                  width: "58rem",
                   border: "1px solid #ccc",
                   borderRadius: "0.375rem",
                   padding: "0.5rem",
@@ -89,7 +92,7 @@ export default function TransactionHistory({ transactions = [], user }) {
                   display: "block",
                   fontSize: "0.875rem",
                   fontWeight: "600",
-                  color: "#4b2e17",
+                  color: "#000",
                   marginBottom: "0.25rem",
                 }}
               >
@@ -100,7 +103,7 @@ export default function TransactionHistory({ transactions = [], user }) {
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
                 style={{
-                  width: "100%",
+                  width: "15rem",
                   border: "1px solid #ccc",
                   borderRadius: "0.375rem",
                   padding: "0.5rem",
@@ -138,7 +141,8 @@ export default function TransactionHistory({ transactions = [], user }) {
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9f5f0")}
                       onMouseLeave={(e) =>
-                        (e.currentTarget.style.backgroundColor = i % 2 === 0 ? "#fffaf6" : "#f6ebdf")
+                        (e.currentTarget.style.backgroundColor =
+                          i % 2 === 0 ? "#fffaf6" : "#f6ebdf")
                       }
                     >
                       <td style={{ border: "1px solid #ccc", padding: "0.5rem", color: "#2e1a0e" }}>
@@ -155,22 +159,27 @@ export default function TransactionHistory({ transactions = [], user }) {
                       </td>
                       <td style={{ border: "1px solid #ccc", padding: "0.5rem", textAlign: "center" }}>
                         <button
-                          onClick={() => alert(`Show more for transaction #${t.id}`)}
-                          style={{
-                            backgroundColor: "#4b2e17",
-                            color: "#fff",
-                            padding: "0.25rem 0.5rem",
-                            borderRadius: "0.375rem",
-                            fontSize: "0.75rem",
-                            fontWeight: "600",
-                            cursor: "pointer",
-                            transition: "background-color 0.2s",
-                          }}
-                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#6b3e1f")}
-                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#4b2e17")}
-                        >
-                          Show More
-                        </button>
+  onClick={() => {
+    // Navigate to full transaction info page
+    window.location.href = `/full-trans-info?id=${t.id}`;
+  }}
+  style={{
+    backgroundColor: "#4b2e17",
+    color: "#fff",
+    padding: "0.25rem 0.5rem",
+    borderRadius: "0.375rem",
+    fontSize: "0.75rem",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "background-color 0.2s",
+    width: "7rem",
+  }}
+  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#311d0fff")}
+  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#4b2e17")}
+>
+  Show More
+</button>
+
                       </td>
                     </tr>
                   ))

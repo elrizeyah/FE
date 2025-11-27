@@ -1,5 +1,6 @@
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Link } from "react-router-dom";
 
 export default function PasswordVerified() {
   return (
@@ -69,31 +70,31 @@ export default function PasswordVerified() {
           </p>
 
           <div style={{ textAlign: "center", marginTop: "2rem" }}>
-            <button
-              style={{
-                padding: "0.6rem 1.5rem",
-                backgroundColor: "#553522ff",
-                color: "#ffffff",
-                fontWeight: "bold",
-                borderRadius: "0.2rem",
-                border: "none",
-                cursor: "pointer",
-                width: "8rem",
-                transition: "background-color .3s",
-                marginTop:"5rem",
-                lineHeight:".6rem",
-                width:"7.2rem"
-            
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#261107")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#553522ff")
-              }
-            >
-              Proceed
-            </button>
+            <Link to="/profile">
+  <button
+    style={{
+      padding: "0.6rem 1.5rem",
+      backgroundColor: "#553522ff",
+      color: "#ffffff",
+      fontWeight: "bold",
+      borderRadius: "0.2rem",
+      border: "none",
+      cursor: "pointer",
+      width: "7.2rem",
+      transition: "background-color .3s",
+      marginTop: "5rem",
+      lineHeight: ".6rem",
+    }}
+    onMouseEnter={(e) =>
+      (e.currentTarget.style.backgroundColor = "#261107")
+    }
+    onMouseLeave={(e) =>
+      (e.currentTarget.style.backgroundColor = "#553522ff")
+    }
+  >
+    Proceed
+  </button>
+</Link>
           </div>
         </div>
       </div>

@@ -7,7 +7,6 @@ export default function GenerateSalesReport() {
   const [toDate, setToDate] = useState("");
   const [hover, setHover] = useState(false);
 
-  // Monthly dropdown states
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
 
@@ -18,15 +17,12 @@ export default function GenerateSalesReport() {
     Custom: "/generate-sales-report/custom",
   };
 
-  // Update inputs based on reportType
+  // Reset inputs on reportType change
   useEffect(() => {
-    const today = new Date();
-
     if (reportType === "Daily") {
-      const dateStr = today.toISOString().split("T")[0];
-      setFromDate(dateStr);
-      setToDate(dateStr);
-    } else if (reportType === "Weekly" || reportType === "Monthly" || reportType === "Custom") {
+      setFromDate(""); // Don't prefill for Daily
+      setToDate("");
+    } else {
       setFromDate("");
       setToDate("");
       setMonth("");
@@ -66,11 +62,24 @@ export default function GenerateSalesReport() {
 
   const handleGenerate = () => {
     if (!reportType) return;
-    if (reportType === "Custom" && (!fromDate || !toDate)) {
-      alert("Please select both start and end dates for the custom report.");
+    if ((reportType === "Daily" || reportType === "Weekly" || reportType === "Custom") && (!fromDate || !toDate)) {
+      alert("Please select the required date(s) for the report.");
+      return;
+    }
+    if (reportType === "Monthly" && (!month || !year)) {
+      alert("Please select both month and year.");
       return;
     }
     window.location.href = routeMap[reportType] + `?from=${fromDate}&to=${toDate}`;
+  };
+
+  // Enable button only if inputs are selected
+  const isButtonEnabled = () => {
+    if (!reportType) return false;
+    if (reportType === "Daily") return fromDate !== "";
+    if (reportType === "Weekly" || reportType === "Custom") return fromDate !== "" && toDate !== "";
+    if (reportType === "Monthly") return month !== "" && year !== "";
+    return false;
   };
 
   // Styles (same as before)
@@ -111,9 +120,6 @@ export default function GenerateSalesReport() {
   const dateInputStyle = { width: "22.4rem", padding: "0.5rem", border: "1px solid #d1d5db", borderRadius: "0.375rem", outline: "none", textTransform: "uppercase" };
   const buttonStyle = { padding: "0.5rem 1.5rem", borderRadius: "0.375rem", fontWeight: "bold", cursor: "pointer", transition: "all 0.3s" };
   const cancelButtonStyle = { ...buttonStyle, backgroundColor: "white", color: "#374151", border: "1px solid #d1d5db" };
-  const generateButtonStyle = reportType
-    ? { padding: "0.5rem 1.5rem", borderRadius: "0.5rem", fontWeight: "600", cursor: "pointer", transition: "all 0.3s", backgroundColor: hover ? "#39210f" : "#4b2e17", color: "white", border: "1px solid #4b2e17", boxShadow: hover ? "0 6px 8px rgba(0,0,0,0.2)" : "0 4px 6px rgba(0,0,0,0.15)" }
-    : { padding: "0.5rem 1.5rem", borderRadius: "0.5rem", fontWeight: "600", cursor: "not-allowed", transition: "all 0.3s", backgroundColor: "#f9f5f0", color: "#9ca3af", border: "1px solid #d1d5db", boxShadow: "none" };
 
   return (
     <AuthenticatedLayout>
@@ -160,7 +166,25 @@ export default function GenerateSalesReport() {
 
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <button style={cancelButtonStyle} onClick={() => (window.location.href = "/sales-report")}>Cancel</button>
-          <button style={generateButtonStyle} disabled={!reportType} onClick={handleGenerate} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Generate Report</button>
+          <button
+            style={{
+              padding: "0.5rem 1.5rem",
+              borderRadius: "0.5rem",
+              fontWeight: "600",
+              cursor: isButtonEnabled() ? "pointer" : "not-allowed",
+              transition: "all 0.3s",
+              backgroundColor: isButtonEnabled() ? (hover ? "#39210f" : "#4b2e17") : "#f9f5f0",
+              color: isButtonEnabled() ? "white" : "#9ca3af",
+              border: isButtonEnabled() ? "1px solid #4b2e17" : "1px solid #d1d5db",
+              boxShadow: isButtonEnabled() ? (hover ? "0 6px 8px rgba(0,0,0,0.2)" : "0 4px 6px rgba(0,0,0,0.15)") : "none",
+            }}
+            disabled={!isButtonEnabled()}
+            onClick={handleGenerate}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+          >
+            Generate Report
+          </button>
         </div>
       </div>
     </AuthenticatedLayout>

@@ -92,9 +92,9 @@ export default function AuthenticatedLayout({ header, children, user }) {
           >
             {[
               { href: "/dashboard", label: "Dashboard" },
-              { href: "/inventory1", label: "Products" },
+              { href: "/securitysettings", label: "Profile" },
               { href: "/transaction-record", label: "Transactions" },
-              { href: "/sales-report", label: "Inventory" },
+              { href: "/inventory1", label: "Inventory" },
               { href: "/sales-report", label: "Reports" },
             ].map((link) => (
               <a

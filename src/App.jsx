@@ -31,6 +31,8 @@ import FullTransInfo from "./Pages/FullTransInfo";
 import Inventory1 from "./Pages/Reports/Inventory1";
 import EditProduct from "./Pages/QA/EditProduct";
 import AddProduct from "./Pages/QA/AddProduct";
+import Loading from "./Pages/Loading";
+
 
 
 export default function App() {
@@ -73,6 +75,8 @@ export default function App() {
         <Route path="/inventory1" element={<Inventory1/>} />
         <Route path="/add-product" element={<AddProduct/>} />
         <Route path="/edit-product" element={<EditProduct/>} />
+        <Route path="/loading" element={<Loading/>} />
+        
     
         
       </Routes>

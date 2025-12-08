@@ -20,12 +20,9 @@ export default function GenerateCapitalReport() {
 
   // Update inputs based on reportType
   useEffect(() => {
-    const today = new Date();
-
     if (reportType === "Daily") {
-      const dateStr = today.toISOString().split("T")[0];
-      setFromDate(dateStr);
-      setToDate(dateStr);
+      setFromDate("");
+      setToDate("");
     } else if (reportType === "Weekly" || reportType === "Monthly" || reportType === "Custom") {
       setFromDate("");
       setToDate("");
@@ -73,7 +70,16 @@ export default function GenerateCapitalReport() {
     window.location.href = routeMap[reportType] + `?from=${fromDate}&to=${toDate}`;
   };
 
-  // Styles (same as before)
+  // Enable button only if input(s) are valid
+  const isButtonEnabled = () => {
+    if (!reportType) return false;
+    if (reportType === "Daily") return fromDate !== "";
+    if (reportType === "Weekly" || reportType === "Custom") return fromDate !== "" && toDate !== "";
+    if (reportType === "Monthly") return month !== "" && year !== "";
+    return false;
+  };
+
+  // Styles
   const containerStyle = { maxWidth: "48rem", margin: "2.5rem auto 0", padding: "1.5rem", backgroundColor: "white", borderRadius: "1rem", border: "1px solid #d7bfa0", boxShadow: "0 10px 15px rgba(0,0,0,0.1)" };
   const headerStyle = { fontSize: "1.5rem", fontWeight: "bold", marginBottom: "1.5rem", color: "#4b2e17" };
   const paragraphStyle = { marginBottom: "1rem", marginTop: "-1.4rem", marginLeft: "1rem", color: "#4b5563" };
@@ -111,9 +117,6 @@ export default function GenerateCapitalReport() {
   const dateInputStyle = { width: "22.4rem", padding: "0.5rem", border: "1px solid #d1d5db", borderRadius: "0.375rem", outline: "none", textTransform: "uppercase" };
   const buttonStyle = { padding: "0.5rem 1.5rem", borderRadius: "0.375rem", fontWeight: "bold", cursor: "pointer", transition: "all 0.3s" };
   const cancelButtonStyle = { ...buttonStyle, backgroundColor: "white", color: "#374151", border: "1px solid #d1d5db" };
-  const generateButtonStyle = reportType
-    ? { padding: "0.5rem 1.5rem", borderRadius: "0.5rem", fontWeight: "600", cursor: "pointer", transition: "all 0.3s", backgroundColor: hover ? "#39210f" : "#4b2e17", color: "white", border: "1px solid #4b2e17", boxShadow: hover ? "0 6px 8px rgba(0,0,0,0.2)" : "0 4px 6px rgba(0,0,0,0.15)" }
-    : { padding: "0.5rem 1.5rem", borderRadius: "0.5rem", fontWeight: "600", cursor: "not-allowed", transition: "all 0.3s", backgroundColor: "#f9f5f0", color: "#9ca3af", border: "1px solid #d1d5db", boxShadow: "none" };
 
   return (
     <AuthenticatedLayout>
@@ -160,7 +163,25 @@ export default function GenerateCapitalReport() {
 
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <button style={cancelButtonStyle} onClick={() => (window.location.href = "/sales-report")}>Cancel</button>
-          <button style={generateButtonStyle} disabled={!reportType} onClick={handleGenerate} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Generate Report</button>
+          <button
+            style={{
+              padding: "0.5rem 1.5rem",
+              borderRadius: "0.5rem",
+              fontWeight: "600",
+              cursor: isButtonEnabled() ? "pointer" : "not-allowed",
+              transition: "all 0.3s",
+              backgroundColor: isButtonEnabled() ? (hover ? "#39210f" : "#4b2e17") : "#f9f5f0",
+              color: isButtonEnabled() ? "white" : "#9ca3af",
+              border: isButtonEnabled() ? "1px solid #4b2e17" : "1px solid #d1d5db",
+              boxShadow: isButtonEnabled() ? (hover ? "0 6px 8px rgba(0,0,0,0.2)" : "0 4px 6px rgba(0,0,0,0.15)") : "none",
+            }}
+            disabled={!isButtonEnabled()}
+            onClick={handleGenerate}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+          >
+            Generate Report
+          </button>
         </div>
       </div>
     </AuthenticatedLayout>

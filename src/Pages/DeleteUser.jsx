@@ -9,6 +9,7 @@ export default function DeleteUserCard() {
         alignItems: "center",
         justifyContent: "center",
         fontFamily: "'Poppins', 'Inter', sans-serif",
+        
       }}
     >
       <div
@@ -24,6 +25,7 @@ export default function DeleteUserCard() {
           alignItems: "center",
           boxSizing: "border-box",
           margin: "0 auto",
+          
         }}
       >
         <h1
@@ -45,8 +47,8 @@ export default function DeleteUserCard() {
             marginBottom: "30px",
           }}
         >
-          Are you sure you want to delete your account?<br />
-          This action cannot be undone.
+          Account deleted successfully.<br />
+          Your account does not exist anymore.
         </p>
 
         <button
@@ -65,7 +67,7 @@ export default function DeleteUserCard() {
             transition: "all 0.3s ease",
             boxShadow: "0 4px 8px rgba(0,0,0,0.25)",
             fontFamily: "'Poppins', 'Inter', sans-serif",
-            margin: "0 auto",
+            marginBottom:"2rem",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background =
@@ -79,19 +81,10 @@ export default function DeleteUserCard() {
           // 🔥 your delete action here
           onClick={() => alert("Account deleted")}
         >
-          Delete Account
+          Back to Start
         </button>
 
-        <p
-          style={{
-            marginTop: "35px",
-            fontSize: "12px",
-            color: "#666",
-            lineHeight: "1.5",
-          }}
-        >
-          If you changed your mind, you may close this window.
-        </p>
+       
       </div>
     </div>
   );

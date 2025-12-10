@@ -1,4 +1,3 @@
-// Login.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -25,36 +24,49 @@ export default function Login() {
     setErrors({});
   };
 
-  const inputStyle = {
-    marginTop: '0.25rem',
-    width: '22.5rem',
-    borderRadius: '6px',
-    border: '1px solid #D1D5DB',
-    padding: '0.5rem',
-    transition: 'all 0.2s',
-    color: '#111827',
-  };
-
-  const handleInputFocus = (e) => {
-    e.target.style.borderColor = '#563d28';
-    e.target.style.backgroundColor = '#fff4e5ff';
-    e.target.placeholder = '';
-  };
-
-  const handleInputBlur = (e, value, placeholder) => {
-    e.target.style.borderColor = value ? '#D1D5DB' : '#D1D5DB';
-    e.target.style.backgroundColor = value ? '#fff4e5ff' : '#ffffff';
-    e.target.placeholder = value ? '' : placeholder;
-  };
-
-  const handleInputHover = (e) => {
+  // --- INPUT EVENTS (same as Register) ---
+  const handleFocus = (e) => {
     e.target.style.borderColor = '#563d28';
     e.target.style.backgroundColor = '#fff4e5ff';
   };
 
-  const handleInputHoverLeave = (e, value, hasError) => {
+  const handleBlur = (e, value, hasError) => {
     e.target.style.borderColor = hasError ? 'red' : '#D1D5DB';
-    e.target.style.backgroundColor = hasError ? '#ffe5e5' : value ? '#fff4e5ff' : '#ffffff';
+    e.target.style.backgroundColor = hasError
+      ? '#ffe5e5'
+      : value
+      ? '#fff4e5ff'
+      : '#ffffff';
+    e.target.style.color = hasError ? 'red' : '#111827';
+  };
+
+  const handleHover = (e) => {
+    e.target.style.borderColor = '#563d28';
+    e.target.style.backgroundColor = '#fff4e5ff';
+  };
+
+  const handleHoverLeave = (e, value, hasError) => {
+    e.target.style.borderColor = hasError ? 'red' : '#D1D5DB';
+    e.target.style.backgroundColor = hasError
+      ? '#ffe5e5'
+      : value
+      ? '#fff4e5ff'
+      : '#ffffff';
+  };
+
+  // --- Checkbox Custom Style ---
+  const checkboxBox = {
+    width: '13px',
+    height: '13px',
+    border: '1.4px solid #6b6b6b',
+    borderRadius: '3px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    fontSize: '10px',
+    fontWeight: 'bold',
+    color: '#3b3b3b',
   };
 
   return (
@@ -63,13 +75,12 @@ export default function Login() {
         backgroundImage: "url('/images/1.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        minHeight: '90vh',
+        minHeight: '95vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         fontFamily: 'Poppins, sans-serif',
-        flexDirection: 'column',
-        padding: '2rem',
+        padding: '1rem',
       }}
     >
       <div
@@ -82,38 +93,38 @@ export default function Login() {
           maxWidth: '400px',
         }}
       >
+        {/* Logo */}
         <img
           src="/images/2.png"
           alt="Logo"
           style={{
-            width: '50rem',
-            height: '15rem',
+            width: '70%',
+            height: 'auto',
             objectFit: 'contain',
+            marginBottom: '-41rem',
             zIndex: 2,
-            marginBottom: '-90px',
-            marginRight: '2rem',
           }}
         />
 
+        {/* Card */}
         <div
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            width: '100%',
+            maxWidth: '400px',
+            maxHeight: '450px',
+            marginTop: '35rem',
+            backgroundColor: 'rgba(255,255,255,0.98)',
             borderRadius: '12px',
-            boxShadow: '4px 8px 20px rgba(0, 0, 0, 0.4)',
-            padding: '3.5rem 2rem 1.5rem 2rem',
-            width: '24rem',
-            marginTop: '-2rem',
-            zIndex: 1,
+            boxShadow: '4px 8px 10px rgba(34, 34, 34, 0.6)',
+            padding: '3rem 2rem 2rem 2rem',
             textAlign: 'left',
-            borderBottom: '2px solid rgba(0, 0, 0, .8)',
-            height: 'auto',
           }}
         >
           <h2
             style={{
               fontWeight: '700',
               color: '#000',
-              fontSize: '2rem',
+              fontSize: '1.8rem',
               letterSpacing: '0.5px',
               marginBottom: '2rem',
               marginTop: '4rem',
@@ -125,78 +136,83 @@ export default function Login() {
           </h2>
 
           <form onSubmit={submit}>
-            {/* EMAIL FIELD */}
+            {/* EMAIL */}
             <div>
-              <label htmlFor="email" style={{ fontWeight: '550', color:'#3b3b3bff'}}>
-                Email
+              <label htmlFor="email" style={{ fontWeight: 550, color: '#3b3b3b' }}>
+                E-mail
               </label>
               <input
                 id="email"
                 type="email"
-                name="email"
                 value={email}
-                placeholder="Email"
-                autoComplete="username"
+                placeholder="E-mail"
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setErrors((prev) => ({ ...prev, email: '' }));
                 }}
                 style={{
-                  ...inputStyle,
-                  width: '22.5rem',
-                  borderColor: errors.email ? 'red' : undefined,
-                  backgroundColor: errors.email ? '#ffe5e5' : email ? '#fff4e5ff' : '#ffffff',
+                  marginTop: '0.25rem',
+                  width: '95%',
+                  padding: '0.5rem',
+                  borderRadius: '6px',
+                  border: `1px solid ${errors.email ? 'red' : '#D1D5DB'}`,
+                  backgroundColor: errors.email
+                    ? '#ffe5e5'
+                    : email
+                    ? '#fff4e5ff'
+                    : '#ffffff',
                   color: errors.email ? 'red' : '#111827',
-                  '::placeholder': {
-                    color: errors.email ? 'red' : '#9CA3AF',
-                  },
+                  transition: '0.2s',
                 }}
-                onFocus={handleInputFocus}
-                onBlur={(e) => handleInputBlur(e, email, 'Email')}
-                onMouseEnter={handleInputHover}
-                onMouseLeave={(e) => handleInputHoverLeave(e, email, !!errors.email)}
+                onFocus={handleFocus}
+                onBlur={(e) => handleBlur(e, email, !!errors.email)}
+                onMouseEnter={handleHover}
+                onMouseLeave={(e) => handleHoverLeave(e, email, !!errors.email)}
               />
               {errors.email && (
-  <span style={{ color: 'red', fontSize: '0.75rem', marginLeft: '.6rem' }}>
-    {errors.email}
-  </span>
-)}
-
+                <span style={{ color: 'red', fontSize: '0.75rem', marginLeft: '.6rem' }}>
+                  {errors.email}
+                </span>
+              )}
             </div>
 
-            {/* PASSWORD FIELD */}
+            {/* PASSWORD */}
             <div style={{ marginTop: '1rem' }}>
-              <label htmlFor="password" style={{ fontWeight: '550', color:'#3b3b3bff'} }>
+              <label htmlFor="password" style={{ fontWeight: 550, color: '#3b3b3b' }}>
                 Password
               </label>
               <input
                 id="password"
                 type="password"
-                name="password"
                 value={password}
                 placeholder="Password"
-                autoComplete="current-password"
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setErrors((prev) => ({ ...prev, password: '' }));
                 }}
                 style={{
-                  ...inputStyle,
-                  width: '22.5rem',
-                  borderColor: errors.password ? 'red' : undefined,
-                  backgroundColor: errors.password ? '#ffe5e5' : password ? '#fff4e5ff' : '#ffffff',
+                  marginTop: '0.25rem',
+                  width: '95%',
+                  padding: '0.5rem',
+                  borderRadius: '6px',
+                  border: `1px solid ${errors.password ? 'red' : '#D1D5DB'}`,
+                  backgroundColor: errors.password
+                    ? '#ffe5e5'
+                    : password
+                    ? '#fff4e5ff'
+                    : '#ffffff',
                   color: errors.password ? 'red' : '#111827',
-                  '::placeholder': {
-                    color: errors.password ? 'red' : '#9CA3AF',
-                  },
+                  transition: '0.2s',
                 }}
-                onFocus={handleInputFocus}
-                onBlur={(e) => handleInputBlur(e, password, 'Password')}
-                onMouseEnter={handleInputHover}
-                onMouseLeave={(e) => handleInputHoverLeave(e, password, !!errors.password)}
+                onFocus={handleFocus}
+                onBlur={(e) => handleBlur(e, password, !!errors.password)}
+                onMouseEnter={handleHover}
+                onMouseLeave={(e) =>
+                  handleHoverLeave(e, password, !!errors.password)
+                }
               />
               {errors.password && (
-                <span style={{ color: 'red', fontSize: '0.75rem', marginLeft: '.6rem' }}>
+                <span style={{ color: 'red', fontSize: '0.75rem' }}>
                   {errors.password}
                 </span>
               )}
@@ -210,20 +226,17 @@ export default function Login() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 fontSize: '0.6rem',
-                color: '#4B5563',
+                color: 'gray',
                 marginLeft: '1rem',
+                marginRight: '1rem',
               }}
             >
-              <label
-                style={{ display: 'flex', alignItems: 'center', gap: '0.15rem' }}
-              >
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.15rem' }}>
                 <input
                   type="checkbox"
                   checked={remember}
                   onChange={(e) => setRemember(e.target.checked)}
-                  style={{
-                    accentColor: '#4d2603ff',
-                  }}
+                  style={{ accentColor: '#fff', cursor: 'pointer' }}
                 />
                 Remember Me
               </label>
@@ -232,42 +245,30 @@ export default function Login() {
                 to="/forgotpassword"
                 style={{
                   color: '#000000',
-                  fontWeight: 700,
+                  fontWeight: 750,
                   textDecoration: 'none',
-                  marginRight: '2rem',
-                  fontSize: '0.6rem',
                 }}
               >
                 Forgot Password?
               </Link>
             </div>
 
-            {/* LOGIN BUTTON */}
-            <div
-              style={{
-                marginTop: '1.5rem',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
+            {/* BUTTON */}
+            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
               <button
                 type="submit"
                 style={{
                   width: '120px',
                   padding: '0.6rem',
-                  fontSize: '1rem',
                   fontWeight: 600,
+                  fontSize: '1rem',
                   color: '#fff',
                   background: 'linear-gradient(to bottom, #4a2f26, #2f1c14)',
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  textAlign: 'center',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'background 0.3s',
                   boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
+                  transition: '0.3s',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background =

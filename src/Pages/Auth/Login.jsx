@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { IconEye, IconEyeOff } from '@tabler/icons-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -25,49 +26,19 @@ export default function Login() {
     setErrors({});
   };
 
-  // --- INPUT EVENTS (same as Register) ---
-  const handleFocus = (e) => {
-    e.target.style.borderColor = '#563d28';
-    e.target.style.backgroundColor = '#fff4e5ff';
+  // ------- HOVER + FOCUS FUNCTIONS -------
+  const hoverEnter = (box) => {
+    box.style.borderColor = '#563d28';
+    box.style.backgroundColor = '#fff4e5ff';
   };
 
-  const handleBlur = (e, value, hasError) => {
-    e.target.style.borderColor = hasError ? 'red' : '#D1D5DB';
-    e.target.style.backgroundColor = hasError
+  const hoverLeave = (box, value, hasError) => {
+    box.style.borderColor = hasError ? 'red' : '#D1D5DB';
+    box.style.backgroundColor = hasError
       ? '#ffe5e5'
       : value
       ? '#fff4e5ff'
       : '#ffffff';
-    e.target.style.color = hasError ? 'red' : '#111827';
-  };
-
-  const handleHover = (e) => {
-    e.target.style.borderColor = '#563d28';
-    e.target.style.backgroundColor = '#fff4e5ff';
-  };
-
-  const handleHoverLeave = (e, value, hasError) => {
-    e.target.style.borderColor = hasError ? 'red' : '#D1D5DB';
-    e.target.style.backgroundColor = hasError
-      ? '#ffe5e5'
-      : value
-      ? '#fff4e5ff'
-      : '#ffffff';
-  };
-
-  // --- Checkbox Custom Style ---
-  const checkboxBox = {
-    width: '13px',
-    height: '13px',
-    border: '1.4px solid #6b6b6b',
-    borderRadius: '3px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    fontSize: '10px',
-    fontWeight: 'bold',
-    color: '#3b3b3b',
   };
 
   return (
@@ -94,54 +65,53 @@ export default function Login() {
           maxWidth: '400px',
         }}
       >
-        {/* Logo */}
+        {/* LOGO */}
         <img
           src="/images/2.png"
           alt="Logo"
           style={{
             width: '70%',
-            height: 'auto',
             objectFit: 'contain',
             marginBottom: '-41rem',
             zIndex: 2,
           }}
         />
 
-        {/* Card */}
+        {/* CARD */}
         <div
           style={{
             width: '100%',
             maxWidth: '400px',
-            maxHeight: '450px',
-            marginTop: '35rem',
             backgroundColor: 'rgba(255,255,255,0.98)',
             borderRadius: '12px',
             boxShadow: '4px 8px 10px rgba(34, 34, 34, 0.6)',
             padding: '3rem 2rem 2rem 2rem',
-            textAlign: 'left',
+            marginTop: '35rem',
           }}
         >
           <h2
             style={{
-              fontWeight: '700',
+              fontWeight: 700,
               color: '#000',
               fontSize: '1.8rem',
-              letterSpacing: '0.5px',
-              marginBottom: '2rem',
-              marginTop: '4rem',
               textAlign: 'center',
-              textShadow: '0 2px 4px rgba(0,0,0,0.25)',
+              marginBottom: '2rem',
             }}
           >
             LOG IN
           </h2>
 
           <form onSubmit={submit}>
-            {/* EMAIL */}
+            {/* EMAIL FIELD */}
             <div>
-              <label htmlFor="email" style={{ fontWeight: 550, color: '#3b3b3b' }}>
+              <label
+                htmlFor="email"
+                style={{ fontWeight: 550, color: '#3b3b3b' }}
+              >
                 E-mail
               </label>
+
+              {/* EMAIL INPUT */}
               <input
                 id="email"
                 type="email"
@@ -155,7 +125,7 @@ export default function Login() {
                   marginTop: '0.25rem',
                   width: '95%',
                   padding: '0.5rem',
-                  borderRadius: '6px',
+                  borderRadius: '2px',
                   border: `1px solid ${errors.email ? 'red' : '#D1D5DB'}`,
                   backgroundColor: errors.email
                     ? '#ffe5e5'
@@ -165,158 +135,116 @@ export default function Login() {
                   color: errors.email ? 'red' : '#111827',
                   transition: '0.2s',
                 }}
-                onFocus={handleFocus}
-                onBlur={(e) => handleBlur(e, email, !!errors.email)}
-                onMouseEnter={handleHover}
-                onMouseLeave={(e) => handleHoverLeave(e, email, !!errors.email)}
+                onMouseEnter={(e) =>
+                  hoverEnter(e.target)
+                }
+                onMouseLeave={(e) =>
+                  hoverLeave(e.target, email, !!errors.email)
+                }
               />
+
               {errors.email && (
-                <span style={{ color: 'red', fontSize: '0.75rem', marginLeft: '.6rem' }}>
+                <span style={{ color: 'red', fontSize: '0.75rem' }}>
                   {errors.email}
                 </span>
               )}
             </div>
 
             {/* PASSWORD FIELD */}
-<div
-  style={{
-    marginTop: "1rem",
-    position: "relative",
-    width: "100%",
-    maxWidth: "25rem",
-  }}
->
-  <label
-    htmlFor="password"
-    style={{ fontWeight: "550", color: "#3b3b3bff" }}
-  >
-    Password
-  </label>
+            <div style={{ marginTop: '1rem', width: '97.5%' }}>
+              <label
+                htmlFor="password"
+                style={{ fontWeight: '550', color: '#3b3b3bff' }}
+              >
+                Password
+              </label>
 
-  <input
-    id="password"
-    type={showPassword ? "text" : "password"}
-    name="password"
-    value={password}
-    placeholder="Password"
-    autoComplete="current-password"
-    onChange={(e) => {
-      setPassword(e.target.value);
-      setErrors((prev) => ({ ...prev, password: "" }));
-    }}
-    style={{
-      marginTop: "0.25rem",
-      width: "100%",
-      maxWidth: "25rem",
-      borderRadius: "3px",
-      border: errors.password ? "1px solid red" : "1px solid #D1D5DB",
-      padding: "0.5rem",
-      paddingRight: "2.2rem", // ⭐ allows icon click
-      transition: "all 0.2s",
-      color: errors.password ? "red" : "#111827",
-      backgroundColor: errors.password
-        ? "#ffe5e5"
-        : password
-        ? "#fff4e5ff"
-        : "#ffffff",
-      boxSizing: "border-box",
-    }}
-    onFocus={(e) => {
-      e.target.style.borderColor = "#563d28";
-      e.target.style.backgroundColor = "#fff4e5ff";
-      e.target.placeholder = "";
-    }}
-    onBlur={(e) => {
-      e.target.style.borderColor = "#D1D5DB";
-      e.target.style.backgroundColor = password
-        ? "#fff4e5ff"
-        : "#ffffff";
-      e.target.placeholder = password ? "" : "Password";
-    }}
-  />
+              {/* WRAPPER */}
+              <div
+                style={{
+                  marginTop: '0.25rem',
+                  width: '100%',
+                  maxWidth: '25rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: errors.password ? '1px solid red' : '1px solid #D1D5DB',
+                  borderRadius: '3px',
+                  backgroundColor: errors.password
+                    ? '#ffe5e5'
+                    : password
+                    ? '#fff4e5ff'
+                    : '#ffffff',
+                  paddingRight: '0.5rem',
+                  transition: '0.2s',
+                }}
+                onMouseEnter={(e) => hoverEnter(e.currentTarget)}
+                onMouseLeave={(e) =>
+                  hoverLeave(e.currentTarget, password, !!errors.password)
+                }
+              >
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={password}
+                  placeholder="Password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setErrors((prev) => ({ ...prev, password: '' }));
+                  }}
+                  style={{
+                    width: '100%',
+                    border: 'none',
+                    outline: 'none',
+                    padding: '0.5rem',
+                    background: 'transparent',
+                    color: errors.password ? 'red' : '#111827',
+                  }}
+                />
 
-  {/* EYE TOGGLE ICON */}
-  <div
-    onClick={() => setShowPassword(!showPassword)}
-    style={{
-      position: "absolute",
-      right: "15px",
-      top: "70%",
-      transform: "translateY(-50%)",
-      cursor: "pointer",
-      width: "20px",
-      height: "20px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      opacity: 0.7,
-      userSelect: "none",
-      zIndex: 5, // ⭐ ensures click works
-    }}
-  >
-    {showPassword ? (
-      // OPEN EYE ICON
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        fill="none"
-        stroke="#555"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M1 10s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" />
-        <circle cx="10" cy="10" r="3" />
-      </svg>
-    ) : (
-      // CLOSED EYE ICON
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        fill="none"
-        stroke="#555"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M2 2 L18 18" />
-        <path d="M1 10s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" />
-        <circle cx="10" cy="10" r="3" />
-      </svg>
-    )}
-  </div>
+                {/* TABLER EYE ICON */}
+                <div
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    cursor: 'pointer',
+                    opacity: 0.7,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {showPassword ? (
+                    <IconEye size={20} stroke={2} color="#555" />
+                  ):
+                  (
+                    <IconEyeOff size={20} stroke={2} color="#555" />
+                  ) }
+                </div>
+              </div>
 
-  {/* ERROR MESSAGE */}
-  {errors.password && (
-    <span
-      style={{ color: "red", fontSize: "0.75rem", marginLeft: ".6rem" }}
-    >
-      {errors.password}
-    </span>
-  )}
-</div>
+              {errors.password && (
+                <span style={{ color: 'red', fontSize: '0.75rem' }}>
+                  {errors.password}
+                </span>
+              )}
+            </div>
 
             {/* REMEMBER ME */}
             <div
               style={{
                 marginTop: '0.8rem',
                 display: 'flex',
-                alignItems: 'center',
                 justifyContent: 'space-between',
                 fontSize: '0.6rem',
-                color: 'gray',
                 marginLeft: '1rem',
                 marginRight: '1rem',
               }}
             >
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.15rem' }}>
+              <label style={{ display: 'flex', gap: '0.15rem' }}>
                 <input
                   type="checkbox"
                   checked={remember}
                   onChange={(e) => setRemember(e.target.checked)}
-                  style={{ accentColor: '#fff', cursor: 'pointer' }}
                 />
                 Remember Me
               </label>
@@ -324,7 +252,7 @@ export default function Login() {
               <Link
                 to="/forgotpassword"
                 style={{
-                  color: '#000000',
+                  color: '#000',
                   fontWeight: 750,
                   textDecoration: 'none',
                 }}
@@ -347,16 +275,6 @@ export default function Login() {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
-                  transition: '0.3s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background =
-                    'linear-gradient(to bottom, #3e2b1c, #2e1c0f)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background =
-                    'linear-gradient(to bottom, #4a2f26, #2f1c14)';
                 }}
               >
                 SIGN IN

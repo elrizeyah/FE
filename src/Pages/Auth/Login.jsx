@@ -26,7 +26,6 @@ export default function Login() {
     setErrors({});
   };
 
-  // ------- HOVER + FOCUS FUNCTIONS -------
   const hoverEnter = (box) => {
     box.style.borderColor = '#563d28';
     box.style.backgroundColor = '#fff4e5ff';
@@ -96,6 +95,7 @@ export default function Login() {
               fontSize: '1.8rem',
               textAlign: 'center',
               marginBottom: '2rem',
+              marginTop:"4rem"
             }}
           >
             LOG IN
@@ -103,7 +103,7 @@ export default function Login() {
 
           <form onSubmit={submit}>
             {/* EMAIL FIELD */}
-            <div>
+            <div style={{ marginBottom: '1rem', position: 'relative', width:"22.5rem" }}>
               <label
                 htmlFor="email"
                 style={{ fontWeight: 550, color: '#3b3b3b' }}
@@ -111,47 +111,45 @@ export default function Login() {
                 E-mail
               </label>
 
-              {/* EMAIL INPUT */}
-              <input
-                id="email"
-                type="email"
-                value={email}
-                placeholder="E-mail"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setErrors((prev) => ({ ...prev, email: '' }));
-                }}
-                style={{
-                  marginTop: '0.25rem',
-                  width: '95%',
-                  padding: '0.5rem',
-                  borderRadius: '2px',
-                  border: `1px solid ${errors.email ? 'red' : '#D1D5DB'}`,
-                  backgroundColor: errors.email
-                    ? '#ffe5e5'
-                    : email
-                    ? '#fff4e5ff'
-                    : '#ffffff',
-                  color: errors.email ? 'red' : '#111827',
-                  transition: '0.2s',
-                }}
-                onMouseEnter={(e) =>
-                  hoverEnter(e.target)
-                }
-                onMouseLeave={(e) =>
-                  hoverLeave(e.target, email, !!errors.email)
-                }
-              />
-
-              {errors.email && (
-                <span style={{ color: 'red', fontSize: '0.75rem' }}>
-                  {errors.email}
-                </span>
-              )}
+              <div style={{ position: 'relative' }}>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  placeholder="E-mail"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setErrors((prev) => ({ ...prev, email: '' }));
+                  }}
+                  style={{
+                    width: '90%',
+                    padding: '0.5rem 2.5rem 0.5rem 2.5rem', // match Register spacing
+                    borderRadius: '2px',
+                    border: `1px solid ${errors.email ? 'red' : '#D1D5DB'}`,
+                    backgroundColor: errors.email
+                      ? '#ffe5e5'
+                      : email
+                      ? '#fff4e5ff'
+                      : '#ffffff',
+                    color: errors.email ? 'red' : '#111827',
+                    transition: 'all 0.2s',
+                    fontSize: '0.9rem',
+                  }}
+                  onMouseEnter={(e) => hoverEnter(e.target)}
+                  onMouseLeave={(e) =>
+                    hoverLeave(e.target, email, !!errors.email)
+                  }
+                />
+                {errors.email && (
+                  <span style={{ color: 'red', fontSize: '0.75rem', marginLeft: '.6rem' }}>
+                    {errors.email}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* PASSWORD FIELD */}
-            <div style={{ marginTop: '1rem', width: '97.5%' }}>
+            <div style={{ marginBottom: '1rem', position: 'relative' }}>
               <label
                 htmlFor="password"
                 style={{ fontWeight: '550', color: '#3b3b3bff' }}
@@ -159,23 +157,22 @@ export default function Login() {
                 Password
               </label>
 
-              {/* WRAPPER */}
               <div
                 style={{
+                  position: 'relative',
+                  width: '24.7rem',
                   marginTop: '0.25rem',
-                  width: '100%',
-                  maxWidth: '25rem',
                   display: 'flex',
                   alignItems: 'center',
                   border: errors.password ? '1px solid red' : '1px solid #D1D5DB',
-                  borderRadius: '3px',
+                  borderRadius: '2px',
                   backgroundColor: errors.password
                     ? '#ffe5e5'
                     : password
                     ? '#fff4e5ff'
                     : '#ffffff',
-                  paddingRight: '0.5rem',
-                  transition: '0.2s',
+                  paddingRight: '0.6rem',
+                  transition: 'all 0.2s',
                 }}
                 onMouseEnter={(e) => hoverEnter(e.currentTarget)}
                 onMouseLeave={(e) =>
@@ -185,7 +182,6 @@ export default function Login() {
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  name="password"
                   value={password}
                   placeholder="Password"
                   onChange={(e) => {
@@ -196,34 +192,33 @@ export default function Login() {
                     width: '100%',
                     border: 'none',
                     outline: 'none',
-                    padding: '0.5rem',
+                    padding: '0.5rem 2.5rem 0.5rem 2.5rem', // match Register spacing
                     background: 'transparent',
                     color: errors.password ? 'red' : '#111827',
+                    fontSize: '0.9rem',
                   }}
                 />
-
-                {/* TABLER EYE ICON */}
                 <div
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
+                    position: 'absolute',
+                    right: '8px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
                     cursor: 'pointer',
                     opacity: 0.7,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    color: errors.password ? 'red' : '#555',
                   }}
                 >
-                  {showPassword ? (
-                    <IconEye size={20} stroke={2} color="#555" />
-                  ):
-                  (
-                    <IconEyeOff size={20} stroke={2} color="#555" />
-                  ) }
+                  {showPassword ? <IconEye size={18} /> : <IconEyeOff size={18} />}
                 </div>
               </div>
 
               {errors.password && (
-                <span style={{ color: 'red', fontSize: '0.75rem' }}>
+                <span style={{ color: 'red', fontSize: '0.75rem', marginLeft: '.6rem' }}>
                   {errors.password}
                 </span>
               )}
@@ -234,17 +229,20 @@ export default function Login() {
               style={{
                 marginTop: '0.8rem',
                 display: 'flex',
+                alignItems: 'center',
                 justifyContent: 'space-between',
                 fontSize: '0.6rem',
+                color: 'gray',
                 marginLeft: '1rem',
                 marginRight: '1rem',
               }}
             >
-              <label style={{ display: 'flex', gap: '0.15rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.15rem' }}>
                 <input
                   type="checkbox"
                   checked={remember}
                   onChange={(e) => setRemember(e.target.checked)}
+                  style={{ accentColor: '#fff', cursor: 'pointer' }}
                 />
                 Remember Me
               </label>
@@ -252,7 +250,7 @@ export default function Login() {
               <Link
                 to="/forgotpassword"
                 style={{
-                  color: '#000',
+                  color: '#000000',
                   fontWeight: 750,
                   textDecoration: 'none',
                 }}
@@ -260,7 +258,7 @@ export default function Login() {
                 Forgot Password?
               </Link>
             </div>
-
+            
             {/* BUTTON */}
             <div style={{ textAlign: 'center', marginTop: '2rem' }}>
               <button

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
 export default function Register() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [data, setData] = useState({
     name: '',
     email: '',
@@ -160,50 +162,96 @@ export default function Register() {
         </h2>
 
         <form onSubmit={handleSubmit}>
-          {['name', 'email', 'password', 'password_confirmation'].map((field) => (
-            <div key={field} style={{ textAlign: 'left', marginBottom: '1rem' }}>
-              <label htmlFor={field} style={{ fontWeight: '550', color: '#3b3b3bff' }}>
-                {field === 'name'
-                  ? 'Username'
-                  : field === 'password_confirmation'
-                  ? 'Confirm Password'
-                  : field.charAt(0).toUpperCase() + field.slice(1)}
-              </label>
-              <input
-                id={field}
-                type={field.includes('password') ? 'password' : 'text'}
-                value={data[field]}
-                onChange={handleChange(field)}
-                placeholder={
-                  field === 'name'
-                    ? 'Username'
-                    : field === 'password_confirmation'
-                    ? 'Confirm Password'
-                    : field.charAt(0).toUpperCase() + field.slice(1)
-                }
-                style={inputStyle(field)}
-                onFocus={handleFocus}
-                onBlur={(e) =>
-                  handleBlur(
-                    e,
-                    field,
-                    field === 'name'
-                      ? 'Username'
-                      : field === 'password_confirmation'
-                      ? 'Confirm Password'
-                      : field.charAt(0).toUpperCase() + field.slice(1)
-                  )
-                }
-                onMouseEnter={handleHover}
-                onMouseLeave={(e) => handleHoverLeave(e, field)}
-              />
-              {errors[field] && (
-                <span style={{ color: 'red', fontSize: '0.75rem', marginLeft: '.6rem' }}>
-                  {errors[field]}
-                </span>
-              )}
-            </div>
-          ))}
+  {['name', 'email', 'password', 'password_confirmation'].map((field) => {
+    const isPassword = field === 'password';
+    const isConfirm = field === 'password_confirmation';
+
+    const labelText =
+      field === 'name'
+        ? 'Username'
+        : field === 'password_confirmation'
+        ? 'Confirm Password'
+        : field.charAt(0).toUpperCase() + field.slice(1);
+
+    return (
+      <div key={field} style={{ textAlign: 'left', marginBottom: '1rem', position: 'relative' }}>
+        <label htmlFor={field} style={{ fontWeight: 550, color: '#3b3b3bff' }}>
+          {labelText}
+        </label>
+
+        <input
+          id={field}
+          type={
+            isPassword
+              ? showPassword
+                ? 'text'
+                : 'password'
+              : isConfirm
+              ? showConfirmPassword
+                ? 'text'
+                : 'password'
+              : 'text'
+          }
+          value={data[field]}
+          onChange={handleChange(field)}
+          placeholder={labelText}
+          style={{
+            ...inputStyle(field),
+            paddingRight: isPassword || isConfirm ? '.5rem' : '0.5rem', // ⭐ space for eye
+          }}
+          onFocus={handleFocus}
+          onBlur={(e) => handleBlur(e, field, labelText)}
+          onMouseEnter={handleHover}
+          onMouseLeave={(e) => handleHoverLeave(e, field)}
+        />
+
+        {/* 🔥 EYE ICON */}
+        {(isPassword || isConfirm) && (
+          <div
+            onClick={() =>
+              isPassword
+                ? setShowPassword((prev) => !prev)
+                : setShowConfirmPassword((prev) => !prev)
+            }
+            style={{
+              position: 'absolute',
+              right: '15px',
+              top: '70%',
+              transform: 'translateY(-50%)',
+              cursor: 'pointer',
+              height: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: 0.7,
+              zIndex: 5,
+            }}
+          >
+            {(isPassword ? showPassword : showConfirmPassword) ? (
+              // OPEN EYE
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#555" strokeWidth="2">
+                <path d="M1 10s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" />
+                <circle cx="10" cy="10" r="3" />
+              </svg>
+            ) : (
+              // CLOSED EYE
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#555" strokeWidth="2">
+                <path d="M2 2 L18 18" />
+                <path d="M1 10s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" />
+                <circle cx="10" cy="10" r="3" />
+              </svg>
+            )}
+          </div>
+        )}
+
+        {errors[field] && (
+          <span style={{ color: 'red', fontSize: '0.75rem', marginLeft: '.6rem' }}>
+            {errors[field]}
+          </span>
+        )}
+      </div>
+    );
+  })}
 
           {/* Remember Me */}
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem', color:"gray" }}>

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -176,47 +177,126 @@ export default function Login() {
               )}
             </div>
 
-            {/* PASSWORD */}
-            <div style={{ marginTop: '1rem' }}>
-              <label htmlFor="password" style={{ fontWeight: 550, color: '#3b3b3b' }}>
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                placeholder="Password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setErrors((prev) => ({ ...prev, password: '' }));
-                }}
-                style={{
-                  marginTop: '0.25rem',
-                  width: '95%',
-                  padding: '0.5rem',
-                  borderRadius: '6px',
-                  border: `1px solid ${errors.password ? 'red' : '#D1D5DB'}`,
-                  backgroundColor: errors.password
-                    ? '#ffe5e5'
-                    : password
-                    ? '#fff4e5ff'
-                    : '#ffffff',
-                  color: errors.password ? 'red' : '#111827',
-                  transition: '0.2s',
-                }}
-                onFocus={handleFocus}
-                onBlur={(e) => handleBlur(e, password, !!errors.password)}
-                onMouseEnter={handleHover}
-                onMouseLeave={(e) =>
-                  handleHoverLeave(e, password, !!errors.password)
-                }
-              />
-              {errors.password && (
-                <span style={{ color: 'red', fontSize: '0.75rem' }}>
-                  {errors.password}
-                </span>
-              )}
-            </div>
+            {/* PASSWORD FIELD */}
+<div
+  style={{
+    marginTop: "1rem",
+    position: "relative",
+    width: "100%",
+    maxWidth: "25rem",
+  }}
+>
+  <label
+    htmlFor="password"
+    style={{ fontWeight: "550", color: "#3b3b3bff" }}
+  >
+    Password
+  </label>
+
+  <input
+    id="password"
+    type={showPassword ? "text" : "password"}
+    name="password"
+    value={password}
+    placeholder="Password"
+    autoComplete="current-password"
+    onChange={(e) => {
+      setPassword(e.target.value);
+      setErrors((prev) => ({ ...prev, password: "" }));
+    }}
+    style={{
+      marginTop: "0.25rem",
+      width: "100%",
+      maxWidth: "25rem",
+      borderRadius: "3px",
+      border: errors.password ? "1px solid red" : "1px solid #D1D5DB",
+      padding: "0.5rem",
+      paddingRight: "2.2rem", // ⭐ allows icon click
+      transition: "all 0.2s",
+      color: errors.password ? "red" : "#111827",
+      backgroundColor: errors.password
+        ? "#ffe5e5"
+        : password
+        ? "#fff4e5ff"
+        : "#ffffff",
+      boxSizing: "border-box",
+    }}
+    onFocus={(e) => {
+      e.target.style.borderColor = "#563d28";
+      e.target.style.backgroundColor = "#fff4e5ff";
+      e.target.placeholder = "";
+    }}
+    onBlur={(e) => {
+      e.target.style.borderColor = "#D1D5DB";
+      e.target.style.backgroundColor = password
+        ? "#fff4e5ff"
+        : "#ffffff";
+      e.target.placeholder = password ? "" : "Password";
+    }}
+  />
+
+  {/* EYE TOGGLE ICON */}
+  <div
+    onClick={() => setShowPassword(!showPassword)}
+    style={{
+      position: "absolute",
+      right: "15px",
+      top: "70%",
+      transform: "translateY(-50%)",
+      cursor: "pointer",
+      width: "20px",
+      height: "20px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      opacity: 0.7,
+      userSelect: "none",
+      zIndex: 5, // ⭐ ensures click works
+    }}
+  >
+    {showPassword ? (
+      // OPEN EYE ICON
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="#555"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M1 10s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" />
+        <circle cx="10" cy="10" r="3" />
+      </svg>
+    ) : (
+      // CLOSED EYE ICON
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="#555"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M2 2 L18 18" />
+        <path d="M1 10s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" />
+        <circle cx="10" cy="10" r="3" />
+      </svg>
+    )}
+  </div>
+
+  {/* ERROR MESSAGE */}
+  {errors.password && (
+    <span
+      style={{ color: "red", fontSize: "0.75rem", marginLeft: ".6rem" }}
+    >
+      {errors.password}
+    </span>
+  )}
+</div>
 
             {/* REMEMBER ME */}
             <div
